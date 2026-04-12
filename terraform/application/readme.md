@@ -64,8 +64,8 @@ main.tf resource - managed identity, storage account
 ## List - used to pass list of resources  
 
 ```  
-variable "subnet_cidrs" {  
-  type    = list(string)  
-  default = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]  
-}  
+variable "subnet_cidrs" {
+  type    = list(string)
+  default = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
+}
 ```  
