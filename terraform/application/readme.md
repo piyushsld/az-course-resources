@@ -33,17 +33,18 @@ variable "enable_encryption" {
 main.tf resource -  
   
 ```  
-resource "azurerm_storage_account" "sa" {
-  name                = "sttfstate001"
-  resource_group_name = azurerm_resource_group.rg.name
-  location            = var.location
-  account_tier        = "Standard"
-  account_replication_type = "LRS"
-  
-  # Feature‑like flag: enable/disable encryption for blob services
-  blob_encryption_enabled    = var.enable_encryption
-  nfs_v3_enabled             = false
-  min_tls_version            = "TLS1_2"
+resource "azurerm_storage_account" "example" {
+  count                             = var.create_stgaccnt ? 1 : 0
+  name                              = "storageaccountname"
+  resource_group_name               = local.rg_name
+  location                          = var.region
+  account_tier                      = var.account_tier
+  account_replication_type          = "GRS"
+  infrastructure_encryption_enabled = var.enable_encryption
+  nfsv3_enabled                     = false
+  min_tls_version                   = "TLS1_2"
+
+  tags = var.tags
 }
 ```  
 
@@ -70,4 +71,43 @@ variable "subnet_cidrs" {
 }
 ```  
 
-main.tf resource - vnet
+main.tf resource  
+```
+resource "azurerm_virtual_network" "example_vnet" {
+  name                = "example-network"
+  location            = var.region
+  resource_group_name = local.rg_name
+  address_space       = ["10.0.0.0/16"]
+  dns_servers         = ["10.0.0.4", "10.0.0.5"]
+
+  dynamic "subnet" {
+    for_each = var.subnet_cidrs
+    content {
+      name             = "subnet-${index(var.subnet_cidrs, subnet.value) + 1}"
+      address_prefixes = [subnet.value]
+    }
+  }
+
+  tags = var.tags
+}
+```
+
+# azurerm backend config
+```
+terraform {
+  required_version = ">= 1.14.7"
+
+  required_providers {
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = ">= 4.68.0"
+    }
+  }
+  backend "azurerm" {
+    resource_group_name  = ""
+    storage_account_name = ""
+    container_name       = ""
+    key                  = ""
+  }
+}
+```
