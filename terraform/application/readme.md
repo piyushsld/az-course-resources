@@ -92,7 +92,7 @@ resource "azurerm_virtual_network" "example_vnet" {
 }
 ```
 
-# azurerm backend config
+# azurerm backend config  
 ```
 terraform {
   required_version = ">= 1.14.7"
@@ -111,3 +111,175 @@ terraform {
   }
 }
 ```
+  
+# Lifecycle meta-arguments  
+  
+## create_before_destroy  
+```
+resource "azurerm_linux_virtual_machine" "web" {
+  name                = "vm-web-${var.environment}"
+  location            = var.location
+  resource_group_name = azurerm_resource_group.rg.name
+  size                = var.vm_size
+  
+  # Create new VM before destroying old one (no downtime)
+  lifecycle {
+    create_before_destroy = true
+  }
+  
+  # ... rest of VM config
+}
+```
+  
+## prevent_destroy  
+
+```
+resource "azurerm_resource_group" "prod_rg" {
+  count    = var.environment == "prod" ? 1 : 0
+  name     = "rg-prod-critical"
+  location = var.location
+  
+  # Terraform refuses to destroy this resource
+  lifecycle {
+    prevent_destroy = true
+  }
+}
+```
+  
+## ignore_changes  
+```
+resource "azurerm_linux_virtual_machine_scale_set" "web" {
+  name                = "vmss-${var.environment}"
+  location            = var.location
+  resource_group_name = azurerm_resource_group.rg.name
+  sku                 = var.vm_size
+  instances           = var.vm_count
+  
+  # Ignore changes to tags (managed by external policy)
+  # and instances (auto-scaling changes them)
+  lifecycle {
+    ignore_changes = [
+      tags,
+      instances
+    ]
+  }
+}
+```
+  
+## replace_triggered_by  
+```
+resource "azurerm_subnet" "app" {
+  name                 = "snet-${var.environment}"
+  resource_group_name  = azurerm_resource_group.rg.name
+  virtual_network_name = azurerm_virtual_network.main.name
+  address_prefixes     = ["10.0.1.0/24"]
+  
+  # Replace subnet when VNet address_space changes
+  lifecycle {
+    replace_triggered_by = [
+      azurerm_virtual_network.main.address_space
+    ]
+  }
+}
+```
+  
+## precondition  
+```
+resource "azurerm_virtual_network" "main" {
+  name                = "vnet-${var.environment}"
+  location            = var.location
+  resource_group_name = azurerm_resource_group.rg.name
+  address_space       = [var.address_space]
+  
+  lifecycle {
+    precondition {
+      condition     = can(cidrsubnet(var.address_space, 8, 1))
+      error_message = "address_space must be valid CIDR (e.g. 10.0.0.0/16)."
+    }
+  }
+}
+```
+  
+## postcondition  
+```
+resource "azurerm_linux_virtual_machine" "web" {
+  # ... VM config
+  
+  lifecycle {
+    postcondition {
+      condition     = self.size != "Standard_B1s" || var.environment != "prod"
+      error_message = "Production VMs cannot use Standard_B1s (too small)."
+    }
+  }
+}
+```
+  
+# for_each meta-argument  
+  
+## Map of Strings - Multiple Resource Groups  
+```
+# variables.tf
+variable "resource_groups" {
+  type = map(string)
+  default = {
+    app    = "canadacentral"
+    db     = "eastus"
+    shared = "eastus2"
+  }
+}
+
+# main.tf
+resource "azurerm_resource_group" "rg" {
+  for_each = var.resource_groups
+  
+  name     = "rg-${each.key}-${var.environment}"
+  location = each.value
+  
+  tags = {
+    Environment = var.environment
+    Purpose     = each.key
+  }
+}
+```
+  
+## Set of Strings - Multiple Subnets. 
+```
+resource "azurerm_subnet" "subnets" {
+  for_each             = toset(["web", "db", "app"])
+  name                 = "${each.value}-subnet-${var.environment}"
+  resource_group_name  = azurerm_resource_group.rg["app"].name
+  virtual_network_name = azurerm_virtual_network.main.name
+  address_prefixes     = ["10.0.${each.value == "web" ? 1 : each.value == "db" ? 2 : 3}.0/24"]
+}
+```
+  
+## Map of Objects - VMs with Different Sizes
+```
+variable "vms" {
+  type = map(object({
+    size  = string
+    count = number
+  }))
+  default = {
+    frontend = {
+      size  = "Standard_B2s"
+      count = 2
+    }
+    backend = {
+      size  = "Standard_D2s_v3" 
+      count = 1
+    }
+  }
+}
+
+resource "azurerm_linux_virtual_machine" "vms" {
+  for_each            = var.vms
+  name                = "${each.key}-vm-${var.environment}"
+  location            = azurerm_resource_group.rg["app"].location
+  resource_group_name = azurerm_resource_group.rg["app"].name
+  size                = each.value.size
+  
+  # ... rest of VM config
+}
+```
+  
