@@ -1,0 +1,7 @@
+.terragrunt.*
+.terragrunt-*
+.terraform/
+terraform.tfstate
+terraform.tfstate.backup
+.terraform.lock.hcl
+terragrunt.*
