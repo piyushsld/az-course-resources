@@ -3,16 +3,13 @@ locals {
 }
 
 remote_state {
-  backend = "azurerm"
+  backend = "local"
   generate = {
     path      = "backend.tf"
     if_exists = "overwrite_terragrunt"
   }
   config = {
-    resource_group_name  = "tf-demo2"
-    storage_account_name = "lddevopsstgaccnt01"
-    container_name       = "tfstate-demo"
-    key                  = "${path_relative_to_include()}/terraform.tfstate"
+    path = "${path_relative_to_include()}/terraform.tfstate"
   }
 }
 
@@ -25,6 +22,24 @@ provider "azurerm" {
   tenant_id       = "${local.tenant_id}"
   subscription_id = var.subscription_id
   use_cli         = true
+}
+EOF
+}
+
+# Generate terraform versioning
+generate "versions" {
+  path      = "versions.tf"
+  if_exists = "overwrite_terragrunt"
+  contents  = <<EOF
+terraform {
+  required_version = ">= 1.14.7"
+  
+  required_providers {
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = ">= 4.69.0"
+    }
+  }
 }
 EOF
 }

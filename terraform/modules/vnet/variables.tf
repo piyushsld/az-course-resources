@@ -6,10 +6,6 @@ variable "location" {
   type = string
 }
 
-variable "subscription_id" {
-  type = string
-}
-
 variable "vnet_address_space" {
   type = string
 }
