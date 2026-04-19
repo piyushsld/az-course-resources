@@ -1,4 +1,4 @@
-resource "azurerm_virtual_network" "vnet_terra" {
+resource "azurerm_virtual_network" "vnet" {
   name                = "vnet-${var.environment}"
   location            = var.location
   resource_group_name = var.rg_name

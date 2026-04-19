@@ -12,3 +12,13 @@ module "vnet" {
   vnet_address_space = var.vnet_address_space
   rg_name            = module.resource_group.rgname
 }
+
+module "subnet" {
+  source                = "./modules/subnet"
+  environment           = var.environment
+  rgname                = module.resource_group.rgname
+  vnet_name             = module.vnet.vnetname
+  subnet_name           = var.subnet_name
+  subnet_address_prefix = var.subnet_address_prefix
+  subnet_delegation     = local.subnet_delegation
+}
