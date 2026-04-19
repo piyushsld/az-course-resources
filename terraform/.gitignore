@@ -4,4 +4,4 @@
 terraform.tfstate
 terraform.tfstate.backup
 .terraform.lock.hcl
-terragrunt.*
+terragrunt
