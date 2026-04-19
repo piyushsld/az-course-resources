@@ -1,4 +1,3 @@
-.terragrunt.*
+.terragrunt
 .terraform.*
-terragrunt*
 .terragrunt-cache
