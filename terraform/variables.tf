@@ -1,43 +1,44 @@
 variable "environment" {
   description = "The environment to deploy to (dev, prod)"
   type        = string
-  default     = "dev"
 }
 
 variable "location" {
   description = "The Azure region to deploy resources in"
   type        = string
-  default     = "canadacentral"
 }
-
-# variable "address_space" {
-#   description = "The address space for the virtual network"
-#   type        = string
-#   default     = "10.0.0.0/16"
-# }
 
 variable "subscription_id" {
-    type    = string
+  type = string
 }
 
-variable "vm_size" {
-    type    = string
+variable "vnet_address_space" {
+  type    = string
+  default = ""
 }
 
-variable "vm_count" {
-    type    = number
+variable "rg_name" {
+  type = string
 }
 
-variable "address_space" {
-    type    = string
-    default = ""
+variable "vnet_name" {
+  type = string
 }
 
-variable "resource_groups" {
-  type = map(string)
-  default = {
-    app    = "canadacentral"
-    db     = "eastus"
-    shared = "eastus2"
-  }
+variable "delegation_enabled" {
+  description = "Whether to enable subnet delegation"
+  type        = bool
+}
+
+variable "delegation_service_name" {
+  description = "The name of the service to delegate to (e.g. Microsoft.ContainerInstance/containerGroups)"
+  type        = string
+}
+
+variable "subnet_name" {
+  type = string
+}
+
+variable "subnet_address_prefix" {
+  type = string
 }

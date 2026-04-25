@@ -1,0 +1,10 @@
+subscription_id         = "99852d3c-e87c-4017-9a07-9c99dd605e1b"
+environment             = "dev"
+location                = "canadacentral"
+rg_name                 = "rg-demo-1"
+vnet_name               = "vnet-demo-1"
+vnet_address_space      = "10.0.0.0/16"
+delegation_enabled      = true
+delegation_service_name = "Microsoft.ContainerInstance/containerGroups"
+subnet_address_prefix   = "10.0.1.0/24"
+subnet_name             = "subnet-demo-1"
