@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: demo-node-selector
+spec:
+  nodeSelector:
+    topology.kubernetes.io/zone: uksouth-2
+    kubernetes.azure.com/agentpool: userpool
+  containers:
+  - name: nginx
+    image: nginx:1.25
