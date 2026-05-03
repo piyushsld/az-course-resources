@@ -1,0 +1,91 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: pod-lister-sa
+  namespace: demo
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: demo
+  name: pod-lister
+rules:
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: pod-lister-binding
+  namespace: demo
+subjects:
+- kind: ServiceAccount
+  name: pod-lister-sa
+  namespace: demo
+roleRef:
+  kind: Role
+  name: pod-lister
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: pod-lister-job
+  namespace: demo
+spec:
+  template:
+    spec:
+      serviceAccountName: pod-lister-sa
+      restartPolicy: Never
+      containers:
+      - name: pod-lister
+        image: bitnami/kubectl:latest
+        command:
+        - /bin/bash
+        - -c
+        - |
+          echo "=== Pods in demo namespace ==="
+          kubectl get pods -n demo --no-headers
+          echo "=== Job completed at $(date) ==="
+        volumeMounts:
+        - name: tmp
+          mountPath: /tmp
+      volumes:
+      - name: tmp
+        emptyDir: {}
+  backoffLimit: 3
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: pod-lister-cronjob
+  namespace: demo
+spec:
+  schedule: "*/1 * * * *"  # Every 1 minute
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          serviceAccountName: pod-lister-sa
+          restartPolicy: Never
+          containers:
+          - name: pod-lister
+            image: bitnami/kubectl:latest
+            command:
+            - /bin/bash
+            - -c
+            - |
+              echo "=== Pods in demo namespace ($(date)) ==="
+              kubectl get pods -n demo -o wide --no-headers
+              echo "=== CronJob completed ==="
+            volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+          volumes:
+          - name: tmp
+            emptyDir: {}
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+  concurrencyPolicy: Forbid
+---

@@ -1,0 +1,11 @@
+# storage-class.yaml
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: aks-ssd-premium
+provisioner: disk.csi.azure.com
+parameters:
+  skuName: Premium_LRS  # Matches your node pool
+reclaimPolicy: Retain     # DON'T auto-delete disks!
+volumeBindingMode: WaitForFirstConsumer
+allowVolumeExpansion: true

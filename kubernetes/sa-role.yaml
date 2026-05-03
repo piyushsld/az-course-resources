@@ -1,0 +1,52 @@
+# Test - kubectl auth can-i get pods --namespace=demo --as=system:serviceaccount:demo:demo-sa
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: demo-sa
+  namespace: demo
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: demo
+  name: pod-reader
+rules:
+- apiGroups: [""]
+  resources: ["pods", "pods/log"]
+  verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: demo-binding
+  namespace: demo
+subjects:
+- kind: ServiceAccount
+  name: demo-sa
+  namespace: demo
+roleRef:
+  kind: Role
+  name: pod-reader
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-app
+  namespace: demo
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: demo
+  template:
+    metadata:
+      labels:
+        app: demo
+    spec:
+      serviceAccountName: demo-sa  # ← This links RBAC
+      containers:
+      - name: nginx
+        image: nginx:1.25
+        command: ["/bin/sh"]
+        args: ["-c", "while true; do wget -q -O- --timeout=1 localhost:80; sleep 1; done"]
