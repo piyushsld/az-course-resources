@@ -21,8 +21,9 @@ myapp/
 # Run below commands in myapp dir
 # npm install
 # npm ci
-# docker build -t yourregistry/todo-api:v1.0.0 .
-# docker push yourregistry/todo-api:v1.0.0
+# docker buildx build --platform=linux/arm64 -t <your-acr-name-here>/todo-api:v1 . --push
+# az aks update -n <aks-cluster-name> -g <resource-group> \
+  --attach-acr <acr-name> # ACR does not have to be in the same rg as aks
 ```
 
 ## Step 2: Setup custom chart structure
@@ -301,14 +302,14 @@ helm install todo-dev ./todo-app-1.0.0.tgz --namespace dev --create-namespace
 kubectl get all -n dev
 
 # Port-forward to test service
-kubectl port-forward svc/todo-dev -n dev 3000:3000
+kubectl port-forward svc/todo-dev-todo-app -n dev 3000:3000
 curl http://localhost:3000/health  # Should return {"status":"OK"}
 ```
 
 ### Load Test (Observe HPA)  
 ```
-# Install Apache Bench (ab)
-sudo apt-get install apache2-utils
+# Install Apache Bench (ab) 
+sudo apt-get install apache2-utils or brew install httpd (for mac users). This provides ab binary used below
 
 # Stress test (generates CPU load)
 ab -n 10000 -c 50 http://localhost:3000/health/
