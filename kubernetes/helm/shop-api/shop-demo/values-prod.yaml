@@ -12,8 +12,8 @@ ingress:
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
     nginx.ingress.kubernetes.io/ssl-redirect-code: "308"
-  frontendHost: aksingressdemo.duckdns.org
-  apiHost: api-aksingressdemo.duckdns.org
+  frontendHost: myshopdemold.mooo.com
+  apiHost: api-myshopdemold.mooo.com
   tls:
     enabled: true
     frontendSecretName: shop-prod-tls
