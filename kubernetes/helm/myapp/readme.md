@@ -3,17 +3,22 @@
 ## Helm chart structure -
 ```
 myapp/
-├── Chart.yaml          # Metadata (name, version, description)
-├── values-dev.yaml     # DEFAULT values (dev-friendly)
-├── values-prod.yaml    # Production overrides
-├── charts/             # Sub-charts/dependencies
-├── templates/          # Kubernetes manifests with {{ templates }}
-│   ├── deployment.yaml
-│   ├── service.yaml
-│   ├── hpa.yaml
-│   ├── networkpolicy.yaml
-│   └── pdb.yaml
-└── README.md
+│ todo-app/
+│ ├── Chart.yaml          # Metadata (name, version, description)
+│ ├── values-dev.yaml     # DEFAULT values (dev-friendly)
+│ ├── values-prod.yaml    # Production overrides
+│ ├── charts/             # Sub-charts/dependencies
+│ ├── templates/          # Kubernetes manifests with {{ templates }}
+│     ├── deployment.yaml
+│     ├── service.yaml
+│     ├── hpa.yaml
+│     ├── networkpolicy.yaml
+│     └── pdb.yaml
+└── readme.md
+├── Dockerfile
+├── package-lock.json
+├── package.json
+├── server.js
 ```
 
 ## Step 1: Build & Push  
