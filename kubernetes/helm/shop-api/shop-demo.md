@@ -69,10 +69,14 @@ spec:
 ```
 1. Sign up with https://freedns.afraid.org/
 2. Register a sub-domain with any publicly available domain like moo.com
+```
 ![Domains list](./Domain-List.png)
+```
 4. Add A type DNS record as in the diagram
+```
 ![DNS Instructions](./DNS-Record-Instructions.png)
 ![DNS Records list](./DNS-A-Record.png)
+```
 5. Wait for this DNS entry to propagate
 6. Run command dig <DNS address> and look for the STATUS field. should be NOERROR
 ```
