@@ -68,11 +68,11 @@ spec:
 ## Register a free sub-domain with freedns
 ```
 1. Sign up with https://freedns.afraid.org/
-2. Register a sub-domain with any publicly available domain like moo.com
+2. Register a sub-domain with any publicly available domain like moo.com. Click on the name.
 ```
 ![Domains list](./Domain-List.png)
 ```
-4. Add A type DNS record as in the diagram
+4. Add A type DNS record as in the diagram, complete the captcha and hit save.
 ```
 ![DNS Instructions](./DNS-Record-Instructions.png)
 ![DNS Records list](./DNS-A-Record.png)
