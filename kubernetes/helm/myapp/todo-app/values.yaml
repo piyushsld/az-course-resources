@@ -1,4 +1,4 @@
-replicaCount: 2
+replicaCount: 1
 
 image:
   repository: helmdemold.azurecr.io/todo-api
@@ -10,7 +10,7 @@ service:
   port: 3000
 
 hpa:
-  enabled: true
+  enabled: false
   minReplicas: 2
   maxReplicas: 10
   targetCPUUtilizationPercentage: 70

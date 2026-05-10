@@ -7,7 +7,7 @@ kubectl create namespace netpol-demo
 kubectl apply -f - <<EOF
 apiVersion: apps/v1
 kind: Deployment
-meta
+metadata:
   name: backend
   namespace: netpol-demo
 spec:
@@ -16,7 +16,7 @@ spec:
     matchLabels:
       app: backend
   template:
-    meta
+    metadata:
       labels:
         app: backend
     spec:
@@ -28,7 +28,7 @@ spec:
 ---
 apiVersion: v1
 kind: Service
-meta
+metadata:
   name: backend
   namespace: netpol-demo
 spec:
@@ -43,7 +43,7 @@ EOF
 kubectl apply -f - <<EOF
 apiVersion: apps/v1
 kind: Deployment
-meta
+metadata:
   name: frontend
   namespace: netpol-demo
 spec:
@@ -52,7 +52,7 @@ spec:
     matchLabels:
       app: frontend
   template:
-    meta
+    metadata:
       labels:
         app: frontend
     spec:
@@ -86,7 +86,7 @@ kubectl exec -n netpol-demo attacker -- wget -q -O- backend:80
 kubectl apply -f - <<EOF
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
-meta
+metadata:
   name: deny-all
   namespace: netpol-demo
 spec:

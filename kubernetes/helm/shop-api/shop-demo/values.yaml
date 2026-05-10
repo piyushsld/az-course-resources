@@ -1,0 +1,48 @@
+nameOverride: ""
+fullnameOverride: ""
+
+frontend:
+  replicaCount: 2
+  image:
+    repository: nginx
+    tag: "alpine"
+    pullPolicy: IfNotPresent
+  containerPort: 80
+  service:
+    type: ClusterIP
+    port: 80
+
+api:
+  replicaCount: 2
+  image:
+    repository: httpd
+    tag: "alpine"
+    pullPolicy: IfNotPresent
+  containerPort: 80
+  service:
+    type: ClusterIP
+    port: 80
+
+admin:
+  replicaCount: 2
+  image:
+    repository: nginx
+    tag: "alpine"
+    pullPolicy: IfNotPresent
+  containerPort: 80
+  service:
+    type: ClusterIP
+    port: 80
+
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-staging"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+  frontendHost: shop.example.com
+  apiHost: api.shop.example.com
+  tls:
+    enabled: true
+    frontendSecretName: shop-tls
+    apiSecretName: api-shop-tls

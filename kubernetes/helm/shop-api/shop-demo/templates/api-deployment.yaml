@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "shop-demo.fullname" . }}-api
+  labels:
+    {{- include "shop-demo.labels" . | nindent 4 }}
+    app: api
+spec:
+  replicas: {{ .Values.api.replicaCount }}
+  selector:
+    matchLabels:
+      app: api
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: api
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      containers:
+      - name: api
+        image: "{{ .Values.api.image.repository }}:{{ .Values.api.image.tag }}"
+        imagePullPolicy: {{ .Values.api.image.pullPolicy }}
+        ports:
+        - containerPort: {{ .Values.api.containerPort }}

@@ -1,0 +1,6 @@
+apiVersion: v2
+name: shop-demo
+description: Demo app for NGINX Ingress host-based and path-based routing with cert-manager TLS
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
