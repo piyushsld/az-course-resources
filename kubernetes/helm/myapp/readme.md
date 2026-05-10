@@ -8,17 +8,17 @@ myapp/
 │ ├── values-dev.yaml     # DEFAULT values (dev-friendly)
 │ ├── values-prod.yaml    # Production overrides
 │ ├── charts/             # Sub-charts/dependencies
-│ ├── templates/          # Kubernetes manifests with {{ templates }}
+│ └── templates/          # Kubernetes manifests with {{ templates }}
 │     ├── deployment.yaml
 │     ├── service.yaml
 │     ├── hpa.yaml
 │     ├── networkpolicy.yaml
 │     └── pdb.yaml
-└── readme.md
+├── readme.md
 ├── Dockerfile
 ├── package-lock.json
 ├── package.json
-├── server.js
+└── server.js
 ```
 
 ## Step 1: Build & Push  
