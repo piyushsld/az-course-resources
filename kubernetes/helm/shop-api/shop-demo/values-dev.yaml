@@ -1,0 +1,21 @@
+frontend:
+  replicaCount: 1
+
+api:
+  replicaCount: 1
+
+admin:
+  replicaCount: 1
+
+ingress:
+  enabled: true
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-staging"
+  frontendHost: shop.demo.local
+  apiHost: api.shop.demo.local
+  tls:
+    enabled: true
+    frontendSecretName: shop-demo-local-tls
+    apiSecretName: api-shop-demo-local-tls
+
+# 74.177.187.254 shop.demo.local api.shop.demo.local

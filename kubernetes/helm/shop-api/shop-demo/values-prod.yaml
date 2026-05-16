@@ -1,0 +1,20 @@
+frontend:
+  replicaCount: 3
+
+api:
+  replicaCount: 3
+
+admin:
+  replicaCount: 2
+
+ingress:
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/ssl-redirect-code: "308"
+  frontendHost: myshopdemold.mooo.com
+  apiHost: api-myshopdemold.mooo.com
+  tls:
+    enabled: true
+    frontendSecretName: shop-prod-tls
+    apiSecretName: api-shop-prod-tls

@@ -1,0 +1,8 @@
+meta
+  annotations:
+    nginx.ingress.kubernetes.io/server-snippet: |
+      location /.well-known/acme-challenge/ {
+        access_log off;
+        root /usr/share/nginx/html;
+        try_files $uri =404;
+      }

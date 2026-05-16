@@ -1,0 +1,42 @@
+# wordpress.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wordpress
+  namespace: demo
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: wordpress
+  template:
+    metadata:
+      labels:
+        app: wordpress
+    spec:
+      containers:
+      - name: wordpress
+        image: wordpress:6.0-php8.1
+        ports:
+        - containerPort: 80
+        env:
+        - name: WORDPRESS_DB_HOST
+          value: "mysql-0.mysql.demo.svc.cluster.local"  # Stable DNS!
+        - name: WORDPRESS_DB_USER
+          value: "root"
+        - name: WORDPRESS_DB_PASSWORD
+          value: "password123"
+        - name: WORDPRESS_DB_NAME
+          value: "wordpress"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: wordpress
+  namespace: demo
+spec:
+  ports:
+  - port: 80
+  selector:
+    app: wordpress
+  type: LoadBalancer

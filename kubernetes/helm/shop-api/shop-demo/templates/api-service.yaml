@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "shop-demo.fullname" . }}-api
+  labels:
+    {{- include "shop-demo.labels" . | nindent 4 }}
+    app: api
+spec:
+  type: {{ .Values.api.service.type }}
+  selector:
+    app: api
+    app.kubernetes.io/instance: {{ .Release.Name }}
+  ports:
+  - port: {{ .Values.api.service.port }}
+    targetPort: {{ .Values.api.containerPort }}
+    protocol: TCP

@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "shop-demo.fullname" . }}-admin
+  labels:
+    {{- include "shop-demo.labels" . | nindent 4 }}
+    app: admin
+spec:
+  replicas: {{ .Values.admin.replicaCount }}
+  selector:
+    matchLabels:
+      app: admin
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: admin
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      containers:
+      - name: admin
+        image: "{{ .Values.admin.image.repository }}:{{ .Values.admin.image.tag }}"
+        imagePullPolicy: {{ .Values.admin.image.pullPolicy }}
+        ports:
+        - containerPort: {{ .Values.admin.containerPort }}
