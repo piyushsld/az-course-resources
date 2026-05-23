@@ -1,4 +1,4 @@
-name: CI Workflow - "${{ github.event.head_commit.message }}"
+name: CI Workflow
 
 on:
   pull_request:
