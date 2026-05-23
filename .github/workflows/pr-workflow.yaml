@@ -1,0 +1,124 @@
+name: PR Workflow Plan
+
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  TF_VERSION: "1.8.5"
+  WORKING_DIR: "./terraform/"
+
+jobs:
+  validate:
+    name: Validate Terraform
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+
+      - name: Terraform Format Check
+        working-directory: ${{ env.WORKING_DIR }}
+        run: terraform fmt -check -recursive
+
+      - name: Terraform Init
+        working-directory: ${{ env.WORKING_DIR }}
+        run: terraform init
+
+      - name: Terraform Validate
+        working-directory: ${{ env.WORKING_DIR }}
+        run: terraform validate
+
+  plan-dev:
+    name: Plan Dev
+    runs-on: ubuntu-latest
+    needs: validate
+    environment: dev
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Azure Login with OIDC
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+
+      - name: Terraform Init
+        working-directory: ${{ env.WORKING_DIR }}/dev
+        run: terraform init
+
+      - name: Terraform Plan Dev
+        working-directory: ${{ env.WORKING_DIR }}/dev
+        env:
+          TF_VAR_client_id: ${{ secrets.AZURE_CLIENT_ID }}
+          TF_VAR_tenant_id: ${{ secrets.AZURE_TENANT_ID }}
+          TF_VAR_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        run: |
+          terraform plan \
+            -var-file=dev.tfvars \
+            -out=dev.tfplan
+
+      - name: Upload Dev Plan
+        uses: actions/upload-artifact@v4
+        with:
+          name: dev-plan
+          path: ${{ env.WORKING_DIR }}/dev/dev.tfplan
+
+  plan-prod:
+    name: Plan Prod
+    runs-on: ubuntu-latest
+    needs: apply-staging
+    environment: prod
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Azure Login with OIDC
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+
+      - name: Terraform Init
+        working-directory: ${{ env.WORKING_DIR }}/prod
+        run: terraform init
+
+      - name: Terraform Plan Prod
+        working-directory: ${{ env.WORKING_DIR }}/prod
+        env:
+          TF_VAR_client_id: ${{ secrets.AZURE_CLIENT_ID }}
+          TF_VAR_tenant_id: ${{ secrets.AZURE_TENANT_ID }}
+          TF_VAR_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        run: |
+          terraform plan \
+            -var-file=prod.tfvars \
+            -out=prod.tfplan
+
+      - name: Display Prod Plan
+        uses: actions/upload-artifact@v4
+        with:
+          name: prod-plan
+          path: ${{ env.WORKING_DIR }}/prod/prod.tfplan
