@@ -30,7 +30,7 @@ jobs:
 
       - name: Terragrunt Format Check
         working-directory: ${{ env.WORKING_DIR }}
-        run: terragrunt fmt -check -recursive
+        run: terragrunt run --all fmt
 
       - name: Terragrunt Init
         working-directory: ${{ env.WORKING_DIR }}
