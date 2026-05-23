@@ -45,7 +45,7 @@ jobs:
         run: terragrunt run -all fmt 
 
       - name: Terragrunt Validate
-        working-directory: ${{ env.WORKING_DIR }}
+        working-directory: ${{ env.WORKING_DIR }}/dev
         run: terragrunt validate
 
       - name: Terragrunt Plan Dev
@@ -94,7 +94,7 @@ jobs:
         run: terragrunt run -all fmt 
 
       - name: Terragrunt Validate
-        working-directory: ${{ env.WORKING_DIR }}
+        working-directory: ${{ env.WORKING_DIR }}/prod
         run: terragrunt validate
 
       - name: Terragrunt Plan Prod
