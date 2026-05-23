@@ -84,7 +84,7 @@ jobs:
   plan-prod:
     name: Plan Prod
     runs-on: ubuntu-latest
-    needs: apply-staging
+    needs: plan-dev
     environment: prod
     steps:
       - name: Checkout
