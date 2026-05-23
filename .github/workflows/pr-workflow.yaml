@@ -55,8 +55,8 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
+      - name: Setup Terragrunt
+        uses: uses: gruntwork-io/terragrunt-action@v3
         with:
           terraform_version: ${{ env.TF_VERSION }}
 
@@ -95,8 +95,8 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
+      - name: Setup Terragrunt
+        uses: gruntwork-io/terragrunt-action@v3
         with:
           terraform_version: ${{ env.TF_VERSION }}
 
