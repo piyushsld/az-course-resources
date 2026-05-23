@@ -27,17 +27,17 @@ jobs:
         with:
           terraform_version: ${{ env.TF_VERSION }}
 
-      - name: Terraform Format Check
+      - name: Terragrunt Format Check
         working-directory: ${{ env.WORKING_DIR }}
-        run: terraform fmt -check -recursive
+        run: terragrunt fmt -check -recursive
 
-      - name: Terraform Init
+      - name: Terragrunt Init
         working-directory: ${{ env.WORKING_DIR }}
-        run: terraform init
+        run: terragrunt init
 
-      - name: Terraform Validate
+      - name: Terragrunt Validate
         working-directory: ${{ env.WORKING_DIR }}
-        run: terraform validate
+        run: terragrunt validate
 
   plan-dev:
     name: Plan Dev
@@ -60,26 +60,24 @@ jobs:
         with:
           terraform_version: ${{ env.TF_VERSION }}
 
-      - name: Terraform Init
+      - name: Terragrunt Init
         working-directory: ${{ env.WORKING_DIR }}/dev
-        run: terraform init
+        run: terragrunt init
 
-      - name: Terraform Plan Dev
+      - name: Terragrunt Plan Dev
         working-directory: ${{ env.WORKING_DIR }}/dev
         env:
           TF_VAR_client_id: ${{ secrets.AZURE_CLIENT_ID }}
           TF_VAR_tenant_id: ${{ secrets.AZURE_TENANT_ID }}
           TF_VAR_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
         run: |
-          terraform plan \
+          terragrunt plan \
             -var-file=dev.tfvars \
             -out=dev.tfplan
 
-      - name: Upload Dev Plan
-        uses: actions/upload-artifact@v4
-        with:
-          name: dev-plan
-          path: ${{ env.WORKING_DIR }}/dev/dev.tfplan
+      - name: Display Dev Plan
+        working-directory: ${{ env.WORKING_DIR }}/dev
+        run: terragrunt show dev.tfplan --json
 
   plan-prod:
     name: Plan Prod
@@ -102,23 +100,21 @@ jobs:
         with:
           terraform_version: ${{ env.TF_VERSION }}
 
-      - name: Terraform Init
+      - name: Terragrunt Init
         working-directory: ${{ env.WORKING_DIR }}/prod
-        run: terraform init
+        run: terragrunt init
 
-      - name: Terraform Plan Prod
+      - name: Terragrunt Plan Prod
         working-directory: ${{ env.WORKING_DIR }}/prod
         env:
           TF_VAR_client_id: ${{ secrets.AZURE_CLIENT_ID }}
           TF_VAR_tenant_id: ${{ secrets.AZURE_TENANT_ID }}
           TF_VAR_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
         run: |
-          terraform plan \
+          terragrunt plan \
             -var-file=prod.tfvars \
             -out=prod.tfplan
 
       - name: Display Prod Plan
-        uses: actions/upload-artifact@v4
-        with:
-          name: prod-plan
-          path: ${{ env.WORKING_DIR }}/prod/prod.tfplan
+        working-directory: ${{ env.WORKING_DIR }}/prod
+        run: terragrunt show prod.tfplan --json
