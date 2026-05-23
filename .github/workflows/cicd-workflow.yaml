@@ -58,6 +58,7 @@ jobs:
   apply-dev:
     name: Apply Dev Environment
     environment: dev
+    needs: plan-dev
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
