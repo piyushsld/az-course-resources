@@ -4,15 +4,15 @@ include "root" {
 
 terraform {
   source = "../"
-    
+
   extra_arguments "vars" {
-    commands = get_terraform_commands_that_need_vars()
+    commands  = get_terraform_commands_that_need_vars()
     arguments = ["-var-file=dev.tfvars"]
   }
   before_hook "copy_parent_tf" {
     commands = ["init"]
-    execute  = [
-      "bash", "-c", 
+    execute = [
+      "bash", "-c",
       "cp ${get_parent_terragrunt_dir()}/*.tf .terragrunt-cache/ 2>/dev/null || true"
     ]
   }
