@@ -56,7 +56,7 @@ jobs:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
       - name: Setup Terragrunt
-        uses: uses: gruntwork-io/terragrunt-action@v3
+        uses: gruntwork-io/terragrunt-action@v3
         with:
           terraform_version: ${{ env.TF_VERSION }}
 
