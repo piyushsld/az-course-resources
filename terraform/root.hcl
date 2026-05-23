@@ -30,7 +30,7 @@ remote_state {
   config = {
     resource_group_name  = "tf-demo2"
     storage_account_name = "lddevopsstgaccnt01"
-    container_name       = "tf-modules"
+    container_name       = "tfstate"
     key                  = "${path_relative_to_include()}/terraform.tfstate"
   }
 }
