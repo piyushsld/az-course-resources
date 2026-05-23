@@ -61,7 +61,7 @@ jobs:
 
       - name: Display Dev Plan
         working-directory: ${{ env.WORKING_DIR }}/dev
-        run: terragrunt show dev.tfplan --json
+        run: terragrunt show dev.tfplan
 
   # plan-prod:
   #   name: Plan Prod
