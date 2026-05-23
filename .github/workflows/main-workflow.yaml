@@ -18,7 +18,7 @@ jobs:
   plan-dev:
     name: Plan Dev
     runs-on: ubuntu-latest
-    environment: dev
+    # environment: dev
     steps:
       - name: Checkout
         uses: actions/checkout@v4
