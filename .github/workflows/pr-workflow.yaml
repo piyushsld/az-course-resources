@@ -11,7 +11,7 @@ permissions:
   contents: read
 
 env:
-  TF_VERSION: "1.8.5"
+  TG_VERSION: "1.0.5"
   WORKING_DIR: "./terraform/"
 
 jobs:
@@ -22,10 +22,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
+      - name: Setup Terragrunt
+        uses: gruntwork-io/terragrunt-action@v3
         with:
-          terraform_version: ${{ env.TF_VERSION }}
+          tg_version: ${{ env.TG_VERSION }}
 
       - name: Terragrunt Format Check
         working-directory: ${{ env.WORKING_DIR }}
@@ -58,7 +58,7 @@ jobs:
       - name: Setup Terragrunt
         uses: gruntwork-io/terragrunt-action@v3
         with:
-          terraform_version: ${{ env.TF_VERSION }}
+          tg_version: ${{ env.TG_VERSION }}
 
       - name: Terragrunt Init
         working-directory: ${{ env.WORKING_DIR }}/dev
@@ -98,7 +98,7 @@ jobs:
       - name: Setup Terragrunt
         uses: gruntwork-io/terragrunt-action@v3
         with:
-          terraform_version: ${{ env.TF_VERSION }}
+          tg_version: ${{ env.TG_VERSION }}
 
       - name: Terragrunt Init
         working-directory: ${{ env.WORKING_DIR }}/prod
