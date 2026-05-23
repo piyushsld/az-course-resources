@@ -6,6 +6,10 @@ on:
       - main
   workflow_dispatch:
 
+permissions:
+  contents: read
+  id-token: write
+
 env:
   TG_VERSION: "1.0.5"
   WORKING_DIR: "./terraform"
