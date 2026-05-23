@@ -26,6 +26,7 @@ jobs:
         uses: gruntwork-io/terragrunt-action@v3
         with:
           tg_version: ${{ env.TG_VERSION }}
+          tofu_version: "1.12.0"
 
       - name: Terragrunt Format Check
         working-directory: ${{ env.WORKING_DIR }}
@@ -59,6 +60,7 @@ jobs:
         uses: gruntwork-io/terragrunt-action@v3
         with:
           tg_version: ${{ env.TG_VERSION }}
+          tofu_version: "1.12.0"
 
       - name: Terragrunt Init
         working-directory: ${{ env.WORKING_DIR }}/dev
@@ -99,6 +101,7 @@ jobs:
         uses: gruntwork-io/terragrunt-action@v3
         with:
           tg_version: ${{ env.TG_VERSION }}
+          tofu_version: "1.12.0"
 
       - name: Terragrunt Init
         working-directory: ${{ env.WORKING_DIR }}/prod
