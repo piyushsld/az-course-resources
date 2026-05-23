@@ -17,7 +17,7 @@ env:
 jobs:
   plan-dev:
     name: Plan Dev Environment
-    environment: dev
+    # environment: dev
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
