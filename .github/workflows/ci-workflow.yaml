@@ -8,7 +8,7 @@ on:
 
 env:
   TG_VERSION: "1.0.5"
-  WORKING_DIR: ${{ ./terraform }}
+  WORKING_DIR: "./terraform"
 
 jobs:
   plan-dev:
