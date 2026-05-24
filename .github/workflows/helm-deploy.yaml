@@ -54,7 +54,7 @@ jobs:
           mv bin/linux_amd64/kubelogin $HOME/bin/
           chmod +x $HOME/bin/kubelogin
           echo "$HOME/bin" >> $GITHUB_PATH
-          kubelogin --version
+          $HOME/bin/kubelogin --version
 
       - name: Set up kubeconfig
         run: |
