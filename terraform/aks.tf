@@ -74,7 +74,7 @@ resource "azurerm_role_assignment" "aks_cluster_admin" {
     "Azure Kubernetes Service Cluster Admin Role",
     "Azure Kubernetes Service RBAC Cluster Admin"
   ]))
-  scope                = module.aks_public.aks_id
+  scope                = module.aks_private.aks_id
   role_definition_name = each.key
   principal_id         = local.user_object_id
 }
