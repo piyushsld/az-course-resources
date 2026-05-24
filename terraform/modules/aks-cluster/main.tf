@@ -62,7 +62,7 @@ resource "azurerm_kubernetes_cluster" "this" {
   sku_tier            = var.sku_tier
 
   private_cluster_enabled           = var.private_cluster_enabled
-  private_dns_zone_id               = var.private_dns_zone_id
+  private_dns_zone_id               = azurerm_private_dns_zone.aks.id
   role_based_access_control_enabled = true
 
   automatic_upgrade_channel = var.automatic_upgrade_channel
@@ -136,4 +136,25 @@ resource "azurerm_kubernetes_cluster_node_pool" "user" {
   lifecycle {
     ignore_changes = all
   }
+}
+
+resource "azurerm_private_dns_zone" "aks" {
+  name                = "privatelink.uksouth.azmk8s.io"
+  resource_group_name = var.resource_group_name
+}
+
+resource "azurerm_private_dns_zone_virtual_network_link" "aks" {
+  name                  = "aks-link"
+  resource_group_name   = var.resource_group_name
+  private_dns_zone_name = azurerm_private_dns_zone.aks.name
+  virtual_network_id    = azurerm_virtual_network.this.id
+  registration_enabled  = false
+}
+
+resource "azurerm_private_dns_zone_virtual_network_link" "runner" {
+  name                  = "runner-link"
+  resource_group_name   = var.resource_group_name
+  private_dns_zone_name = azurerm_private_dns_zone.aks.name
+  virtual_network_id    = "/subscriptions/99852d3c-e87c-4017-9a07-9c99dd605e1b/resourceGroups/tf-demo2/providers/Microsoft.Network/virtualNetworks/vnet-runner"
+  registration_enabled  = false
 }
