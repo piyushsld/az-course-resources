@@ -42,10 +42,16 @@ jobs:
         run: |
           curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
 
-      - name: Setup kubelogin
-        uses: azure/use-kubelogin@v1
-        with:
-          kubelogin-version: '0.2.17'
+      - name: Install kubelogin
+        run: |
+          KUBELOGIN_VERSION=v0.0.32
+          curl -LO https://github.com/Azure/kubelogin/releases/download/${KUBELOGIN_VERSION}/kubelogin-linux-amd64.zip
+          unzip kubelogin-linux-amd64.zip
+          mkdir -p $HOME/bin
+          mv bin/linux_amd64/kubelogin $HOME/bin/
+          chmod +x $HOME/bin/kubelogin
+          echo "$HOME/bin" >> $GITHUB_PATH
+          kubelogin --version
 
       - name: Set up kubeconfig
         run: |
