@@ -21,6 +21,12 @@ resource "azurerm_virtual_network" "this" {
   tags                = var.tags
 }
 
+resource "azurerm_role_assignment" "aks_network" {
+  scope                = azurerm_virtual_network.this.id
+  role_definition_name = "Network Contributor"
+  principal_id         = var.user_assigned_identity_principal_id
+}
+
 resource "azurerm_subnet" "nodes" {
   name                 = var.node_subnet_name
   resource_group_name  = var.resource_group_name
@@ -100,7 +106,8 @@ resource "azurerm_kubernetes_cluster" "this" {
   dynamic "api_server_access_profile" {
     for_each = var.api_server_vnet_integration_enabled ? [1] : []
     content {
-      subnet_id = azurerm_subnet.apiserver[0].id
+      subnet_id                           = azurerm_subnet.apiserver[0].id
+      virtual_network_integration_enabled = true
     }
   }
 

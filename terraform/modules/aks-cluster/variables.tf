@@ -197,3 +197,9 @@ variable "api_server_vnet_integration_enabled" {
   type        = bool
   default     = false
 }
+
+variable "user_assigned_identity_principal_id" {
+  type        = string
+  description = "User assigned identity principal ID for role assignment when identity_type is UserAssigned."
+  default     = null
+}

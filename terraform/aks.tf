@@ -13,6 +13,12 @@
 #   features {}
 # }
 
+resource "azurerm_user_assigned_identity" "aks" {
+  name                = "uami-aks-prod-uksouth-01"
+  location            = "uksouth"
+  resource_group_name = module.aks-rg.rgname
+}
+
 module "aks-rg" {
   source      = "./modules/resource-group"
   environment = var.environment
@@ -25,17 +31,20 @@ module "aks-rg" {
 #   location = "uksouth"
 # }
 
-module "aks_public" {
+module "aks_private" {
   source = "./modules/aks-cluster"
 
-  resource_group_name = module.aks-rg.rgname
-  location            = "uksouth"
-  cluster_name        = "aks-prod-uksouth-01"
-  dns_prefix          = "aksproduks01"
+  resource_group_name                 = module.aks-rg.rgname
+  location                            = "uksouth"
+  cluster_name                        = "aks-prod-uksouth-01"
+  dns_prefix                          = "aksproduks01"
+  identity_type                       = "UserAssigned"
+  user_assigned_identity_id           = azurerm_user_assigned_identity.aks.id
+  user_assigned_identity_principal_id = azurerm_user_assigned_identity.aks.principal_id
 
   sku_tier                            = "Standard"
-  private_cluster_enabled             = false
-  api_server_vnet_integration_enabled = false
+  private_cluster_enabled             = true
+  api_server_vnet_integration_enabled = true
 
   vnet_name                  = "vnet-aks-prod-uksouth-01"
   vnet_address_space         = ["10.50.0.0/16"]
@@ -74,7 +83,7 @@ resource "azurerm_role_assignment" "aks_cluster_admin" {
     "Azure Kubernetes Service Cluster Admin Role",
     "Azure Kubernetes Service RBAC Cluster Admin"
   ]))
-  scope                = module.aks_public.aks_id
+  scope                = module.aks_private.aks_id
   role_definition_name = each.key
   principal_id         = local.user_object_id
 }
