@@ -8,9 +8,7 @@ run-name: "Helm Deploy: ${{ github.event.head_commit.message || github.workflow 
 #       - completed
 
 on:
-  push:
-    branches:
-    - main
+  workflow_dispatch:
 
 permissions:
   contents: read
