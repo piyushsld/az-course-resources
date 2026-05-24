@@ -41,6 +41,11 @@ jobs:
         run: |
           curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
 
+      - name: Setup kubelogin
+        uses: azure/use-kubelogin@v1
+        with:
+          kubelogin-version: 'latest'
+
       - name: Set up kubeconfig
         run: |
           az aks get-credentials --resource-group ${{ env.myResourceGroup }} --name ${{ env.myAKSCluster }} --overwrite-existing
