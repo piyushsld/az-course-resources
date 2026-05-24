@@ -25,7 +25,7 @@ module "aks-rg" {
 #   location = "uksouth"
 # }
 
-module "aks_public" {
+module "aks_private" {
   source = "./modules/aks-cluster"
 
   resource_group_name = module.aks-rg.rgname
@@ -34,8 +34,8 @@ module "aks_public" {
   dns_prefix          = "aksproduks01"
 
   sku_tier                            = "Standard"
-  private_cluster_enabled             = false
-  api_server_vnet_integration_enabled = false
+  private_cluster_enabled             = true
+  api_server_vnet_integration_enabled = true
 
   vnet_name                  = "vnet-aks-prod-uksouth-01"
   vnet_address_space         = ["10.50.0.0/16"]
