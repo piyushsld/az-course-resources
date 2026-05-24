@@ -23,7 +23,7 @@ env:
 
 jobs:
   helm-deploy:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    # if: ${{ github.event.workflow_run.conclusion == 'success' }}
     environment: dev
     name: Deploy Helm Chart
     runs-on: self-hosted
