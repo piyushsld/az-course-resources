@@ -24,7 +24,7 @@ resource "azurerm_virtual_network" "this" {
 resource "azurerm_role_assignment" "aks_network" {
   scope                = azurerm_virtual_network.this.id
   role_definition_name = "Network Contributor"
-  principal_id         = var.user_assigned_identity_id
+  principal_id         = var.user_assigned_identity_principal_id
 }
 
 resource "azurerm_subnet" "nodes" {

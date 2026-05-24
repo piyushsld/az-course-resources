@@ -34,12 +34,13 @@ module "aks-rg" {
 module "aks_private" {
   source = "./modules/aks-cluster"
 
-  resource_group_name       = module.aks-rg.rgname
-  location                  = "uksouth"
-  cluster_name              = "aks-prod-uksouth-01"
-  dns_prefix                = "aksproduks01"
-  identity_type             = "UserAssigned"
-  user_assigned_identity_id = azurerm_user_assigned_identity.aks.principal_id
+  resource_group_name                 = module.aks-rg.rgname
+  location                            = "uksouth"
+  cluster_name                        = "aks-prod-uksouth-01"
+  dns_prefix                          = "aksproduks01"
+  identity_type                       = "UserAssigned"
+  user_assigned_identity_id           = azurerm_user_assigned_identity.aks.id
+  user_assigned_identity_principal_id = azurerm_user_assigned_identity.aks.principal_id
 
   sku_tier                            = "Standard"
   private_cluster_enabled             = true
