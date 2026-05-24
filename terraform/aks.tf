@@ -39,7 +39,7 @@ module "aks_private" {
   cluster_name              = "aks-prod-uksouth-01"
   dns_prefix                = "aksproduks01"
   identity_type             = "UserAssigned"
-  user_assigned_identity_id = azurerm_user_assigned_identity.aks.id
+  user_assigned_identity_id = azurerm_user_assigned_identity.aks.principal_id
 
   sku_tier                            = "Standard"
   private_cluster_enabled             = true
