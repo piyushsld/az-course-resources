@@ -34,11 +34,8 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       
-      - name: Install kubectl
-        run: |
-          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-          chmod +x kubectl
-          mv kubectl /usr/local/bin/
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v4
       
       - name: Install Helm
         run: |
@@ -51,4 +48,4 @@ jobs:
       - name: Deploy Helm Chart
         working-directory: ${{ env.WORKING_DIR }}
         run: |
-          helm upgrade --install todo-dev --namespace dev --create-namespace --values values.yaml
+          helm upgrade --install todo-dev . --namespace dev --create-namespace --values values.yaml
