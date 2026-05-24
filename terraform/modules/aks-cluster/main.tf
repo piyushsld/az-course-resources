@@ -162,5 +162,5 @@ resource "azurerm_private_dns_zone_virtual_network_link" "runner" {
 resource "azurerm_role_assignment" "aks_private_dns" {
   scope                = azurerm_private_dns_zone.aks.id
   role_definition_name = "Private DNS Zone Contributor"
-  principal_id         = azurerm_user_assigned_identity.aks.principal_id
+  principal_id         = var.user_assigned_identity_principal_id
 }
