@@ -1,57 +1,57 @@
-# name: CI Workflow
+name: CI Workflow
 
-# on:
-#   pull_request:
-#     branches:
-#       - main
-#   workflow_dispatch:
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
 
-# permissions:
-#   contents: read
-#   id-token: write
+permissions:
+  contents: read
+  id-token: write
 
-# env:
-#   TG_VERSION: "1.0.5"
-#   WORKING_DIR: "./terraform"
+env:
+  TG_VERSION: "1.0.5"
+  WORKING_DIR: "./terraform"
 
-# jobs:
-#   plan-dev:
-#     name: Plan Dev Environment
-#     # environment: dev
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: Checkout code
-#         uses: actions/checkout@v2
+jobs:
+  plan-dev:
+    name: Plan Dev Environment
+    # environment: dev
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-#       - name: Azure login
-#         uses: azure/login@v2
-#         with:
-#           client-id: ${{ secrets.AZURE_CLIENT_ID }}
-#           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-#           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      - name: Azure login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       
-#       - name: Install Terragrunt
-#         uses: gruntwork-io/terragrunt-action@v3
-#         with:
-#           tg_version: ${{ env.TG_VERSION }}
-#           tofu_version: '1.12.0'
+      - name: Install Terragrunt
+        uses: gruntwork-io/terragrunt-action@v3
+        with:
+          tg_version: ${{ env.TG_VERSION }}
+          tofu_version: '1.12.0'
       
-#       - name: Terragrunt init
-#         working-directory: ${{ env.WORKING_DIR }}/dev
-#         run: terragrunt init
+      - name: Terragrunt init
+        working-directory: ${{ env.WORKING_DIR }}/dev
+        run: terragrunt init
 
-#       - name: Terragrunt fmt
-#         working-directory: ${{ env.WORKING_DIR }}
-#         run: terragrunt hcl fmt
+      - name: Terragrunt fmt
+        working-directory: ${{ env.WORKING_DIR }}
+        run: terragrunt hcl fmt
 
-#       - name: Terragrunt validate
-#         working-directory: ${{ env.WORKING_DIR }}/dev
-#         run: terragrunt validate
+      - name: Terragrunt validate
+        working-directory: ${{ env.WORKING_DIR }}/dev
+        run: terragrunt validate
       
-#       - name: Terragrunt plan
-#         working-directory: ${{ env.WORKING_DIR }}/dev
-#         env: 
-#           TF_VAR_client_id: ${{ secrets.AZURE_CLIENT_ID }}
-#           TF_VAR_tenant_id: ${{ secrets.AZURE_TENANT_ID }}
-#           TF_VAR_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-#         run: terragrunt plan -out=dev.tfplan -input=false
+      - name: Terragrunt plan
+        working-directory: ${{ env.WORKING_DIR }}/dev
+        env: 
+          TF_VAR_client_id: ${{ secrets.AZURE_CLIENT_ID }}
+          TF_VAR_tenant_id: ${{ secrets.AZURE_TENANT_ID }}
+          TF_VAR_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        run: terragrunt plan -out=dev.tfplan -input=false
