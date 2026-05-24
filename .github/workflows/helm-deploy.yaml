@@ -15,6 +15,7 @@ env:
   myAKSCluster: "aks-prod-uksouth-01"
   myResourceGroup: "rg-aks-prod-uksouth-01-dev"
   WORKING_DIR: "./kubernetes/helm/myapp/todo-app/"
+  GITHUB_TOKEN: ${{ github.token }}
 
 
 jobs:
@@ -44,7 +45,7 @@ jobs:
       - name: Setup kubelogin
         uses: azure/use-kubelogin@v1
         with:
-          kubelogin-version: '0.1.7'
+          kubelogin-version: '0.2.17'
 
       - name: Set up kubeconfig
         run: |
