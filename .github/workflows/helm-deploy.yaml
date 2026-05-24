@@ -13,7 +13,7 @@ permissions:
 
 env:
   myAKSCluster: "aks-prod-uksouth-01"
-  myResourceGroup: "rg-aks-prod-uksouth-01"
+  myResourceGroup: "rg-aks-prod-uksouth-01-dev"
   WORKING_DIR: "./kubernetes/helm/myapp/todo-app/"
 
 
