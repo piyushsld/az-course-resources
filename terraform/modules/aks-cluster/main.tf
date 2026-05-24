@@ -158,3 +158,9 @@ resource "azurerm_private_dns_zone_virtual_network_link" "runner" {
   virtual_network_id    = "/subscriptions/99852d3c-e87c-4017-9a07-9c99dd605e1b/resourceGroups/tf-demo2/providers/Microsoft.Network/virtualNetworks/vnet-runner"
   registration_enabled  = false
 }
+
+resource "azurerm_role_assignment" "aks_private_dns" {
+  scope                = azurerm_private_dns_zone.aks.id
+  role_definition_name = "Private DNS Zone Contributor"
+  principal_id         = azurerm_user_assigned_identity.aks.principal_id
+}
