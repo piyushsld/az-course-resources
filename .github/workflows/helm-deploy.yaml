@@ -44,11 +44,15 @@ jobs:
       - name: Setup kubelogin
         uses: azure/use-kubelogin@v1
         with:
-          kubelogin-version: 'latest'
+          kubelogin-version: '0.1.7'
 
       - name: Set up kubeconfig
         run: |
           az aks get-credentials --resource-group ${{ env.myResourceGroup }} --name ${{ env.myAKSCluster }} --overwrite-existing
+
+      - name: Convert kubeconfig
+        run: |
+          kubelogin convert-kubeconfig -l azurecli
 
       - name: Deploy Helm Chart
         working-directory: ${{ env.WORKING_DIR }}
