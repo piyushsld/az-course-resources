@@ -100,7 +100,8 @@ resource "azurerm_kubernetes_cluster" "this" {
   dynamic "api_server_access_profile" {
     for_each = var.api_server_vnet_integration_enabled ? [1] : []
     content {
-      subnet_id = azurerm_subnet.apiserver[0].id
+      subnet_id                           = azurerm_subnet.apiserver[0].id
+      virtual_network_integration_enabled = true
     }
   }
 
