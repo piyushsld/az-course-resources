@@ -1,0 +1,11 @@
+#cloud-config
+
+write_files:
+  - path: /home/azureuser/bootstrap.sh
+    permissions: "0755"
+    owner: azureuser:azureuser
+    content: |
+${indent(6, bootstrap_script)}
+
+runcmd:
+  - runuser -l azureuser -c "/home/azureuser/bootstrap.sh"

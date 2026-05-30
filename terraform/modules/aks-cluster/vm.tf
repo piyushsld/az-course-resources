@@ -30,6 +30,10 @@ resource "azurerm_linux_virtual_machine" "ghrunner" {
     storage_account_type = "Standard_LRS"
   }
 
+  custom_data = base64encode(
+    file("${path.module}/cloud-init.yaml"),
+  )
+
   source_image_reference {
     publisher = "Canonical"
     offer     = "ubuntu-24_04-lts"
