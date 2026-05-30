@@ -151,11 +151,92 @@ resource "azurerm_private_dns_zone_virtual_network_link" "aks" {
   registration_enabled  = false
 }
 
+resource "azurerm_network_security_group" "gh-runner-nsg" {
+  name                = "gh-runner-nsg"
+  location            = var.location
+  resource_group_name = var.resource_group_name
+}
+
+resource "azurerm_virtual_network" "gh-runner" {
+  name                = "vnet-runner"
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  address_space       = ["10.0.0.0/20"]
+  tags                = var.tags
+
+  # subnet {
+  #   name             = "snet-runner"
+  #   address_prefixes = ["10.0.1.0/24"]
+  # }
+
+  # subnet {
+  #   name             = "AzureBastionSubnet"
+  #   address_prefixes = ["10.0.2.0/24"]
+  #   security_group   = azurerm_network_security_group.gh-runner-nsg.id
+  # }
+}
+
+resource "azurerm_subnet" "runner" {
+  name                 = "runner-snet"
+  resource_group_name  = var.resource_group_name
+  virtual_network_name = azurerm_virtual_network.gh-runner.name
+
+  address_prefixes = ["10.0.1.0/24"]
+}
+
+resource "azurerm_subnet" "bastion-snet" {
+  name                 = "bastion-snet"
+  resource_group_name  = var.resource_group_name
+  virtual_network_name = azurerm_virtual_network.gh-runner.name
+
+  address_prefixes = ["10.0.2.0/24"]
+}
+
+resource "azurerm_public_ip" "bastion-pip" {
+  name                = "bastion-pip"
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  allocation_method   = "Static"
+  sku                 = "Standard"
+}
+
+resource "azurerm_bastion_host" "gh-runner-bastion" {
+  name                = "gh-runner-bastion"
+  location            = var.location
+  resource_group_name = var.resource_group_name
+
+  ip_configuration {
+    name                 = "configuration"
+    subnet_id            = azurerm_subnet.bastion-snet.id
+    public_ip_address_id = azurerm_public_ip.bastion-pip.id
+  }
+}
+
+resource "azurerm_public_ip" "nat-pip" {
+  name                = "nat-pip"
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  allocation_method   = "Static"
+  sku                 = "Standard"
+}
+
+resource "azurerm_nat_gateway" "gh-runner-nat" {
+  name                = "gh-runner-nat"
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  sku_name            = "Standard"
+}
+
+resource "azurerm_nat_gateway_public_ip_association" "nat-asscociation" {
+  nat_gateway_id       = azurerm_nat_gateway.gh-runner-nat.id
+  public_ip_address_id = azurerm_public_ip.nat-pip.id
+}
+
 resource "azurerm_private_dns_zone_virtual_network_link" "runner" {
   name                  = "runner-link"
   resource_group_name   = var.resource_group_name
   private_dns_zone_name = azurerm_private_dns_zone.aks.name
-  virtual_network_id    = "/subscriptions/99852d3c-e87c-4017-9a07-9c99dd605e1b/resourceGroups/tf-demo2/providers/Microsoft.Network/virtualNetworks/vnet-runner"
+  virtual_network_id    = azurerm_virtual_network.gh-runner.id
   registration_enabled  = false
 }
 

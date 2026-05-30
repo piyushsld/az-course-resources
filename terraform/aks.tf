@@ -61,6 +61,7 @@ module "aks_private" {
   user_pool_vm_size   = "Standard_D2ps_v6"
   user_pool_min_count = 2
   user_pool_max_count = 5
+  ssh_public_key      = var.ssh_public_key
 
   tags = {
     env      = "prod"

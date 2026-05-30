@@ -203,3 +203,9 @@ variable "user_assigned_identity_principal_id" {
   description = "User assigned identity principal ID for role assignment when identity_type is UserAssigned."
   default     = null
 }
+
+variable "ssh_public_key" {
+  type        = string
+  description = "SSH public key for VM access."
+  sensitive   = true
+}
