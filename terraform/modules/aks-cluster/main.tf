@@ -245,3 +245,17 @@ resource "azurerm_role_assignment" "aks_private_dns" {
   role_definition_name = "Private DNS Zone Contributor"
   principal_id         = var.user_assigned_identity_principal_id
 }
+
+resource "azurerm_virtual_network_peering" "peer-1" {
+  name                      = "aks-to-runner"
+  resource_group_name       = var.resource_group_name
+  virtual_network_name      = azurerm_virtual_network.gh-runner.name
+  remote_virtual_network_id = azurerm_virtual_network.this.id
+}
+
+resource "azurerm_virtual_network_peering" "peer-2" {
+  name                      = "runner-to-aks"
+  resource_group_name       = var.resource_group_name
+  virtual_network_name      = azurerm_virtual_network.this.name
+  remote_virtual_network_id = azurerm_virtual_network.gh-runner.id
+}

@@ -37,7 +37,7 @@ helm install cert-manager jetstack/cert-manager \
 # letsencrypt-prod.yaml
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
-meta
+metadata:
   name: letsencrypt-prod
 spec:
   acme:
@@ -52,7 +52,7 @@ spec:
 ---
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
-meta
+metadata:
   name: letsencrypt-staging
 spec:
   acme:
