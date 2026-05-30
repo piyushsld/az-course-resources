@@ -185,7 +185,7 @@ resource "azurerm_subnet" "runner" {
 }
 
 resource "azurerm_subnet" "bastion-snet" {
-  name                 = "bastion-snet"
+  name                 = "AzureBastionSubnet"
   resource_group_name  = var.resource_group_name
   virtual_network_name = azurerm_virtual_network.gh-runner.name
 
