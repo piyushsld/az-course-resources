@@ -1,18 +1,18 @@
 frontend:
-  replicaCount: 1
+  replicaCount: 2
 
 api:
-  replicaCount: 1
+  replicaCount: 2
 
 admin:
-  replicaCount: 1
+  replicaCount: 2
 
 ingress:
   enabled: true
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-staging"
-  frontendHost: shop.demo.local
-  apiHost: api.shop.demo.local
+  frontendHost: shop-lddemo.nya.pub
+  apiHost: api-shop-lddemo.nya.pub
   tls:
     enabled: true
     frontendSecretName: shop-demo-local-tls
