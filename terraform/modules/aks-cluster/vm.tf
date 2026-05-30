@@ -14,7 +14,7 @@ resource "azurerm_linux_virtual_machine" "ghrunner" {
   name                = "ghrunner-01"
   resource_group_name = var.resource_group_name
   location            = var.location
-  size                = "Standard_B2s"
+  size                = "Standard_D2as_v4"
   admin_username      = "azureuser"
   network_interface_ids = [
     azurerm_network_interface.ghrunner-nic.id,
