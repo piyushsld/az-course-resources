@@ -1,5 +1,5 @@
 # Stage 1: Build the Spring Boot application
-FROM maven:3-eclipse-temurin-19-alpine as build
+FROM maven:3.9.0-amazoncorretto-19 AS build
 
 # Set the working directory inside the container
 WORKDIR /app
