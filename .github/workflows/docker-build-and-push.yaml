@@ -1,0 +1,78 @@
+name: ArgoCD Gitops Workflow
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+env:
+  #TG_VERSION: "1.0.5"
+  WORKING_DIR: "./kubernetes/helm/multi-app/app"
+  menifest_path: "./kubernetes/helm/multi-app/k8s-menifests"
+  ECR_REGISTRY: "azurelddemo.azurecr.io"
+
+jobs:
+  build-push:
+    name: Build and Push 
+    environment: dev
+    runs-on: ghrunner-01
+
+    strategy:
+      fail-fast: false
+      matrix:
+        service:
+          - name: frontend
+            ecr_repo: prod-craftica-frontend
+          - name: catalogue
+            ecr_repo: prod-craftica-catalogue
+          - name: voting
+            ecr_repo: prod-craftica-voting
+          - name: recommendation
+            ecr_repo: prod-craftica-recco
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Azure login
+        uses: azure/login@v3
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Login to ACR
+        run: |
+          az acr login --name ${{ env.ECR_REGISTRY }}
+
+      - name: Build and push Docker image ${{ matrix.service.name }}
+        working-directory: ${{ env.WORKING_DIR }}/${{ matrix.service.name }}
+        run: |
+          docker buildx build --platform linux/amd64 -t ${{ env.ECR_REGISTRY }}/${{ matrix.service.ecr_repo }}/${{ matrix.service.name }}:${{ github.sha }} . --push
+
+      - name: Update Kubernetes deployment manifest ${{ matrix.service.name }}
+        run: |
+
+          # Update the image in the deployment file
+          sed -i "s|image:.*${{ matrix.service.name }}.*|image: ${{ env.ECR_REGISTRY }}/${{ matrix.service.ecr_repo }}:${{ github.sha }}|g" \
+            ./${{ env.menifest_path }}/${{ matrix.service.menifest }}
+
+          echo "Updated ${{ matrix.service.menifest }} with new image tag -> ${{ github.sha }}"
+          echo "Image: ${{ env.ECR_REGISTRY }}/${{ matrix.service.ecr_repo }}:${{ github.sha }}"
+
+      - name: Commit and push updated manifests ${{ matrix.service.name }}
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add ${{ env.menifest_path }}/*.yaml
+          git diff --staged --quiet || git commit -m "Update ${{ matrix.service.name }} image to ${{ github.sha }} tag"
+          git pull --rebase origin ${{ env.environment_branch }}
+          git push --force origin ${{ env.environment_branch }}
+
+      - name: Summary
+        run: |
+          echo " Built and pushed ${{ matrix.service.name }}" >> $GITHUB_STEP_SUMMARY
+          echo "Image: ${{ env.ECR_REGISTRY }}/${{ matrix.service.ecr_repo }}:${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "Updated deployment manifest with new image" >> $GITHUB_STEP_SUMMARY
