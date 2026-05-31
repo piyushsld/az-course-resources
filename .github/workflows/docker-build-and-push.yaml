@@ -9,8 +9,8 @@ permissions:
 
 env:
   #TG_VERSION: "1.0.5"
-  WORKING_DIR: "./kubernetes/helm/multi-app/app"
-  menifest_path: "./kubernetes/helm/multi-app/k8s-menifests"
+  WORKING_DIR: "kubernetes/helm/multi-app/app"
+  menifest_path: "kubernetes/helm/multi-app/k8s-menifests"
   ECR_REGISTRY: "azurelddemo.azurecr.io"
 
 jobs:
@@ -24,12 +24,16 @@ jobs:
       matrix:
         service:
           - name: frontend
+            menifest: 02-frontend-deployment.yaml
             ecr_repo: prod-craftica-frontend
           - name: catalogue
+            menifest: 03-catalogue-deployment.yaml
             ecr_repo: prod-craftica-catalogue
           - name: voting
+            menifest: 04-voting-deployment.yaml
             ecr_repo: prod-craftica-voting
           - name: recommendation
+            menifest: 05-recommendation-deployment.yaml
             ecr_repo: prod-craftica-recco
 
     steps:
