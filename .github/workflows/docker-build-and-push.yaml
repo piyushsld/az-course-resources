@@ -17,7 +17,7 @@ jobs:
   build-push:
     name: Build and Push 
     environment: dev
-    runs-on: ghrunner-01
+    runs-on: self-hosted
 
     strategy:
       fail-fast: false
