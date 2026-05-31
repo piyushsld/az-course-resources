@@ -70,7 +70,7 @@ jobs:
         run: |
 
           # Update the image in the deployment file
-          sed -i "s|image:.*${{ matrix.service.name }}.*|image: ${{ env.ECR_REGISTRY }}/${{ matrix.service.ecr_repo }}/${{ matrix.service.name }}:${{ github.sha }}|g" \
+          sed -i "s|image:.*${{ matrix.service.ecr_repo }}.*|image: ${{ env.ECR_REGISTRY }}/${{ matrix.service.ecr_repo }}/${{ matrix.service.name }}:${{ github.sha }}|g" \
             ./${{ env.menifest_path }}/${{ matrix.service.menifest }}
 
           echo "Updated ${{ matrix.service.menifest }} with new image tag -> ${{ github.sha }}"
