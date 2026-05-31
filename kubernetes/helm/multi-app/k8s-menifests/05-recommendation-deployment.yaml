@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
       - name: recco
-        image: azurelddemo.azurecr.io/prod-craftica-recco:f6238534a243ea9a295dd719de441944c4a8997b
+        image: azurelddemo.azurecr.io/prod-craftica-recco/recommendation:8599a8af15a2a4fd6a332749d749c67ac1e3f569
         ports:
         - containerPort: 8080
           name: http
