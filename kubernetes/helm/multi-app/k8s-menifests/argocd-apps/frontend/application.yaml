@@ -7,7 +7,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/piyushsld/az-course-resources.git
-    targetRevision: prod
+    targetRevision: HEAD
     # targetRevision: main --- IGNORE ---
     path: kubernetes/helm/multi-app/k8s-menifests
     directory:
