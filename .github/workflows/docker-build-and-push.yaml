@@ -54,7 +54,7 @@ jobs:
       - name: Build and push Docker image ${{ matrix.service.name }}
         working-directory: ${{ env.WORKING_DIR }}/${{ matrix.service.name }}
         run: |
-          docker buildx build --platform linux/amd64 -t ${{ env.ECR_REGISTRY }}/${{ matrix.service.ecr_repo }}/${{ matrix.service.name }}:${{ github.sha }} . --push
+          docker buildx build --platform linux/arm64 -t ${{ env.ECR_REGISTRY }}/${{ matrix.service.ecr_repo }}/${{ matrix.service.name }}:${{ github.sha }} . --push
 
       - name: Update Kubernetes deployment manifest ${{ matrix.service.name }}
         run: |
