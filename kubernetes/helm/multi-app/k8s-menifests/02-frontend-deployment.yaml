@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: azurelddemo.azurecr.io/prod-craftica-frontend:55414de8b143742ef1d5883bd2f999b6fff50265
+        image: azurelddemo.azurecr.io/prod-craftica-frontend:f6238534a243ea9a295dd719de441944c4a8997b
         ports:
         - containerPort: 3000
           name: http
