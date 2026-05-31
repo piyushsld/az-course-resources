@@ -44,7 +44,7 @@ spec:
     spec:
       containers:
       - name: voting
-        image: azurelddemo.azurecr.io/prod-craftica-voting:55414de8b143742ef1d5883bd2f999b6fff50265
+        image: azurelddemo.azurecr.io/prod-craftica-voting:f6238534a243ea9a295dd719de441944c4a8997b
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
