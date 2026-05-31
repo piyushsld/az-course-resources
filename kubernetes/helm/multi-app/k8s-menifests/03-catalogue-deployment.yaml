@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
       - name: catalogue
-        image: azurelddemo.azurecr.io/prod-craftica-catalogue:f6238534a243ea9a295dd719de441944c4a8997b
+        image: azurelddemo.azurecr.io/prod-craftica-catalogue/catalogue:6f4613a5a9346263744df321bb7e24953fd60e7d
         imagePullPolicy: Always
         ports:
         - containerPort: 5000
