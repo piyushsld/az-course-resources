@@ -18,7 +18,7 @@ permissions:
 env:
   myAKSCluster: "aks-prod-uksouth-01"
   myResourceGroup: "rg-aks-prod-uksouth-01-dev"
-  WORKING_DIR: "./kubernetes/argocd"
+  WORKING_DIR: "kubernetes/argocd"
   GITHUB_TOKEN: ${{ github.token }}
 
 
