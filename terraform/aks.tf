@@ -80,6 +80,7 @@ data "azurerm_client_config" "current" {}
 locals {
   user_object_id = "e94af094-451c-4943-ba57-feedf4cd5955" # Replace with your actual Object ID 
   # Run this to get your Object ID: az ad signed-in-user show --query id --output tsv
+  github_app_reg_id = "3e380a73-236e-4d4a-85fd-2f9600ba9fc3" # Replace with your GitHub App Registration's Application (client) ID
 }
 
 resource "azurerm_role_assignment" "aks_cluster_admin" {
@@ -90,4 +91,14 @@ resource "azurerm_role_assignment" "aks_cluster_admin" {
   scope                = module.aks_private.aks_id
   role_definition_name = each.key
   principal_id         = local.user_object_id
+}
+
+resource "azurerm_role_assignment" "aks_cluster_admin" {
+  for_each = toset(([
+    "Azure Kubernetes Service Cluster Admin Role",
+    "Azure Kubernetes Service RBAC Cluster Admin"
+  ]))
+  scope                = module.aks_private.aks_id
+  role_definition_name = each.key
+  principal_id         = local.github_app_reg_id
 }
