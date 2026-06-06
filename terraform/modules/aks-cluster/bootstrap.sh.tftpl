@@ -2,7 +2,7 @@
 
 set -euxo pipefail
 
-exec > >(tee -a /var/log/bootstrap.log)
+exec > >(tee -a /home/azureuser/bootstrap.log)
 exec 2>&1
 
 cd /home/azureuser

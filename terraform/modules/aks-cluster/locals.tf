@@ -8,10 +8,21 @@ locals {
     }
   )
 
-  cloud_init = templatefile(
-    "${path.module}/cloud-init.yaml.tftpl",
+  cloud_init = <<-EOT
+#cloud-config
+${yamlencode({
+  write_files = [
     {
-      bootstrap_script = local.bootstrap_script
+      path        = "/home/azureuser/bootstrap.sh"
+      permissions = "0755"
+      owner       = "azureuser:azureuser"
+      content     = local.bootstrap_script
     }
-  )
+  ]
+
+  runcmd = [
+    "sudo -u azureuser bash /home/azureuser/bootstrap.sh"
+  ]
+})}
+EOT
 }

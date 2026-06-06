@@ -21,3 +21,7 @@ output "node_subnet_id" {
 output "api_server_subnet_id" {
   value = try(azurerm_subnet.apiserver[0].id, null)
 }
+
+output "cloud_init_debug" {
+  value = local.cloud_init
+}
