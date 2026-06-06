@@ -13,14 +13,14 @@ locals {
 ${yamlencode({
   write_files = [
     {
-      path        = "/home/azureuser/bootstrap.sh"
+      path        = "/tmp/bootstrap.sh"
       permissions = "0755"
       content     = local.bootstrap_script
     }
   ]
 
   runcmd = [
-    "sudo -u azureuser bash /home/azureuser/bootstrap.sh"
+    "sudo -u azureuser bash /tmp/bootstrap.sh"
   ]
 })}
 EOT
