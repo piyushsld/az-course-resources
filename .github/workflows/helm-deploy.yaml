@@ -103,4 +103,7 @@ jobs:
       - name: Apply ClusterIssuer yaml
         working-directory: ${{ env.WORKING_DIR }}
         run: |
+          echo "Current path: $(pwd)"
+          echo "Listing files in working directory:"
+          ls -la ${{ env.WORKING_DIR }}
           kubectl apply -f ${{ env.WORKING_DIR }}/argo-ingress.yaml
