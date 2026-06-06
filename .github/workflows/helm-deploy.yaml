@@ -89,7 +89,7 @@ jobs:
       - name: Apply ClusterIssuer yaml
         working-directory: ${{ env.WORKING_DIR }}
         run: |
-          kubectl apply -f ${{ env.WORKING_DIR }}/cluster-issuer.yaml
+          kubectl apply -f cluster-issuer.yaml
 
       - name: Deploy ArgoCD Chart
         run: |
@@ -106,4 +106,4 @@ jobs:
           echo "Current path: $(pwd)"
           echo "Listing files in working directory:"
           ls -la ${{ env.WORKING_DIR }}
-          kubectl apply -f ${{ env.WORKING_DIR }}/argo-ingress.yaml
+          kubectl apply -f argo-ingress.yaml
