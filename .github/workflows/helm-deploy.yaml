@@ -2,10 +2,10 @@ name: Helm Deploy
 run-name: "Helm Deploy: ${{ github.event.head_commit.message || github.workflow }}"
 
 on:
-  workflow_run:
-    workflows: ["CICD Merge Workflow"]
-    types:
-      - completed
+  # workflow_run:
+  #   workflows: ["CICD Merge Workflow"]
+  #   types:
+  #     - completed
   workflow_dispatch:
 
 # on:
