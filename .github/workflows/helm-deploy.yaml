@@ -100,10 +100,7 @@ jobs:
             --create-namespace \
             --set crds.install=true
 
-      - name: Apply ClusterIssuer yaml
+      - name: Apply Argo Ingress yaml
         working-directory: ${{ env.WORKING_DIR }}
         run: |
-          echo "Current path: $(pwd)"
-          echo "Listing files in working directory:"
-          ls -la ${{ env.WORKING_DIR }}
           kubectl apply -f argo-ingress.yaml
