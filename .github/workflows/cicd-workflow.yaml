@@ -89,7 +89,19 @@ jobs:
       - name: Terragrunt validate
         working-directory: ${{ env.WORKING_DIR }}/dev
         run: terragrunt validate
-      
+
+      - name: Generate runner token
+        id: token
+        env:
+          GH_TOKEN: ${{ secrets.RUNNER_ADMIN_PAT }}
+        run: |
+          TOKEN=$(gh api \
+            -X POST \
+            repos/${{ github.repository }}/actions/runners/registration-token \
+            --jq '.token')
+
+          echo "token=$TOKEN" >> $GITHUB_OUTPUT
+
       - name: Terragrunt plan
         working-directory: ${{ env.WORKING_DIR }}/dev
         env: 
@@ -97,6 +109,7 @@ jobs:
           TF_VAR_tenant_id: ${{ secrets.AZURE_TENANT_ID }}
           TF_VAR_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           TF_VAR_ssh_public_key: ${{ secrets.SSH_PUBLIC_KEY }}
+          TF_VAR_runner_token: ${{ steps.token.outputs.token }}
         run: terragrunt plan -out=dev.tfplan -input=false
 
       - name: Terragrunt apply
@@ -106,4 +119,5 @@ jobs:
           TF_VAR_tenant_id: ${{ secrets.AZURE_TENANT_ID }}
           TF_VAR_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           TF_VAR_ssh_public_key: ${{ secrets.SSH_PUBLIC_KEY }}
+          TF_VAR_runner_token: ${{ steps.token.outputs.token }} 
         run: terragrunt apply dev.tfplan --auto-approve
