@@ -9,7 +9,7 @@ locals {
   )
 
   cloud_init = templatefile(
-    "${path.module}/cloud-init.tftpl",
+    "${path.module}/cloud-init.yaml.tftpl",
     {
       bootstrap_script = local.bootstrap_script
     }
