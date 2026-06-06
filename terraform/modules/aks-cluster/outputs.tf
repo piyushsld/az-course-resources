@@ -25,3 +25,7 @@ output "api_server_subnet_id" {
 output "cloud_init_debug" {
   value = local.cloud_init
 }
+
+output "key_value_id" {
+  value = azurerm_key_vault.this.id
+}

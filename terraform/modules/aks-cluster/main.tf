@@ -68,6 +68,9 @@ resource "azurerm_kubernetes_cluster" "this" {
   automatic_upgrade_channel = var.automatic_upgrade_channel
   node_os_upgrade_channel   = var.node_os_upgrade_channel
 
+  oidc_issuer_enabled       = true
+  workload_identity_enabled = true
+
   default_node_pool {
     name                         = var.system_pool_name
     vm_size                      = var.system_pool_vm_size
@@ -258,4 +261,18 @@ resource "azurerm_virtual_network_peering" "peer-2" {
   resource_group_name       = var.resource_group_name
   virtual_network_name      = azurerm_virtual_network.this.name
   remote_virtual_network_id = azurerm_virtual_network.gh-runner.id
+}
+
+
+resource "azurerm_role_assignment" "aks_acr_pull" {
+  scope                = azurerm_container_registry.acr.id
+  role_definition_name = "AcrPull"
+  principal_id         = azurerm_kubernetes_cluster.this.kubelet_identity[0].object_id
+}
+
+resource "azurerm_role_assignment" "kv_secrets_user" {
+  scope                = azurerm_key_vault.this.id
+  role_definition_name = "Key Vault Secrets User"
+
+  principal_id = var.user_assigned_identity_principal_id
 }

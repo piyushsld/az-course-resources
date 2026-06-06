@@ -220,3 +220,9 @@ variable "gh_runner_token" {
   description = "GitHub Actions runner token."
   sensitive   = true
 }
+
+variable "pvt_ep_subnet_space" {
+  type        = list(string)
+  description = "Private endpoint subnet CIDR for private cluster API server."
+  default     = ["10.50.3.0/24"]
+}

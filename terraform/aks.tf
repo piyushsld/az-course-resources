@@ -50,6 +50,7 @@ module "aks_private" {
   vnet_address_space         = ["10.50.0.0/16"]
   node_subnet_name           = "snet-aks-nodes"
   node_subnet_prefixes       = ["10.50.1.0/24"]
+  pvt_ep_subnet_space        = ["10.50.3.0/24"]
   create_api_server_subnet   = true
   api_server_subnet_name     = "snet-aks-apiserver"
   api_server_subnet_prefixes = ["10.50.2.0/28"]
