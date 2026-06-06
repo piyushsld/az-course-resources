@@ -17,7 +17,7 @@ permissions:
 env:
   myAKSCluster: "aks-prod-uksouth-01"
   myResourceGroup: "rg-aks-prod-uksouth-01-dev"
-  WORKING_DIR: "./kubernetes/helm/myapp/todo-app/"
+  WORKING_DIR: "./kubernetes/argocd"
   GITHUB_TOKEN: ${{ github.token }}
 
 
@@ -64,7 +64,42 @@ jobs:
         run: |
           kubelogin convert-kubeconfig -l azurecli
 
-      - name: Deploy Helm Chart
+      - name: Deploy Ingress Chart
+        run: |
+          helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+          helm repo update
+
+          # Install (creates LoadBalancer)
+          helm install nginx-ingress ingress-nginx/ingress-nginx \
+            --namespace ingress-nginx --create-namespace \
+            --set controller.service.type=LoadBalancer \
+            --set controller.service.annotations."service\.beta\.kubernetes\.io/azure-load-balancer-health-probe-request-path"="/healthz"
+
+      - name: Deploy Cert-Manager Chart
+        run: |
+          helm repo add jetstack https://charts.jetstack.io
+          helm repo update
+
+          # Install cert-manager (creates LoadBalancer)
+          helm install cert-manager jetstack/cert-manager \
+            --namespace cert-manager --create-namespace \
+            --set installCRDs=true
+
+      - name: Apply ClusterIssuer yaml
         working-directory: ${{ env.WORKING_DIR }}
         run: |
-          helm upgrade --install todo-dev . --namespace dev --create-namespace --values values.yaml
+          kubectl apply -f ${{ env.WORKING_DIR }}/cluster-issuer.yaml
+
+      - name: Deploy ArgoCD Chart
+        run: |
+          helm repo add argo https://argoproj.github.io/argo-helm
+          helm repo update
+          helm install argocd argo/argo-cd \
+            --namespace argocd \
+            --create-namespace \
+            --set crds.install=true
+
+      - name: Apply ClusterIssuer yaml
+        working-directory: ${{ env.WORKING_DIR }}
+        run: |
+          kubectl apply -f ${{ env.WORKING_DIR }}/argo-ingress.yaml
