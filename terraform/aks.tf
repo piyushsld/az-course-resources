@@ -93,7 +93,7 @@ resource "azurerm_role_assignment" "aks_cluster_admin" {
   principal_id         = local.user_object_id
 }
 
-resource "azurerm_role_assignment" "aks_cluster_admin" {
+resource "azurerm_role_assignment" "aks_cluster_admin_github" {
   for_each = toset(([
     "Azure Kubernetes Service Cluster Admin Role",
     "Azure Kubernetes Service RBAC Cluster Admin"
