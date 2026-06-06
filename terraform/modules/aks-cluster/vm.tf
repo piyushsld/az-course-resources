@@ -30,9 +30,7 @@ resource "azurerm_linux_virtual_machine" "ghrunner" {
     storage_account_type = "Standard_LRS"
   }
 
-  custom_data = base64encode(
-    file("${path.module}/cloud-init.yaml"),
-  )
+  custom_data = base64encode(local.cloud_init)
 
   source_image_reference {
     publisher = "Canonical"

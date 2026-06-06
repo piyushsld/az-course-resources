@@ -63,6 +63,9 @@ module "aks_private" {
   user_pool_max_count = 5
   ssh_public_key      = var.ssh_public_key
 
+  gh_runner_token = var.gh_runner_token
+  gh_runner_url   = var.gh_runner_url
+
   tags = {
     env      = "prod"
     workload = "aks"

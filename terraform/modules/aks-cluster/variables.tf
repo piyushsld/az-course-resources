@@ -209,3 +209,14 @@ variable "ssh_public_key" {
   description = "SSH public key for VM access."
   sensitive   = true
 }
+
+variable "gh_runner_url" {
+  type        = string
+  description = "GitHub Actions runner URL, e.g."
+}
+
+variable "gh_runner_token" {
+  type        = string
+  description = "GitHub Actions runner token."
+  sensitive   = true
+}

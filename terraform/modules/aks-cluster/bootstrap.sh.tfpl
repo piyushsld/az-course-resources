@@ -2,7 +2,10 @@
 
 set -euxo pipefail
 
-sudo cd /home/azureuser
+exec > >(tee -a /var/log/bootstrap.log)
+exec 2>&1
+
+cd /home/azureuser
 
 echo "Bootstrap started: $(date)"
 
@@ -14,7 +17,7 @@ sudo curl -fsSL 'https://azurecliprod.blob.core.windows.net/$root/deb_install.sh
 
 # Add Docker's official GPG key:
 sudo apt update
-sudo apt install ca-certificates curl
+sudo apt install -y ca-certificates curl
 sudo install -m 0755 -d /etc/apt/keyrings
 sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
 sudo chmod a+r /etc/apt/keyrings/docker.asc
@@ -29,16 +32,27 @@ Architectures: $(dpkg --print-architecture)
 Signed-By: /etc/apt/keyrings/docker.asc
 EOF
 
-sudo apt update && sudo apt install unzip tar
+sudo apt update && sudo apt install -y unzip tar
 
-sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+sudo apt-get install -y \
+  docker-ce \
+  docker-ce-cli \
+  containerd.io \
+  docker-buildx-plugin \
+  docker-compose-plugin
 
 mkdir actions-runner && cd actions-runner
 
 curl -o actions-runner-linux-x64-2.334.0.tar.gz -L https://github.com/actions/runner/releases/download/v2.334.0/actions-runner-linux-x64-2.334.0.tar.gz
-echo "hi"  actions-runner-linux-x64-2.334.0.tar.gz" | shasum -a 256 -c
 
 tar xzf ./actions-runner-linux-x64-2.334.0.tar.gz
+
+./config.sh \
+  --url ${github_runner_url} \
+  --token ${github_runner_token} \
+  --unattended \
+  --replace \
+  --name ghrunner-01
 
 sudo ./svc.sh install && sudo ./svc.sh start && sudo ./svc.sh status
 
