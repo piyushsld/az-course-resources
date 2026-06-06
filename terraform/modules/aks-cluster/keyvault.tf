@@ -6,7 +6,7 @@ resource "azurerm_private_dns_zone" "kv" {
 }
 
 resource "azurerm_key_vault" "this" {
-  name                = "kv-prod-uksouth-01"
+  name                = "azurelddemouksouth01"
   location            = var.location
   resource_group_name = var.resource_group_name
 

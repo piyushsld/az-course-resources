@@ -2,7 +2,7 @@
 
 set -euxo pipefail
 
-exec > >(tee -a /home/azureuser/bootstrap.log)
+exec > >(tee -a /tmp/bootstrap.log)
 exec 2>&1
 
 cd /home/azureuser
@@ -55,5 +55,7 @@ tar xzf ./actions-runner-linux-x64-2.334.0.tar.gz
   --name ghrunner-01
 
 sudo ./svc.sh install && sudo ./svc.sh start && sudo ./svc.sh status
+
+sudo az aks install-cli
 
 echo "Bootstrap completed: $(date)"

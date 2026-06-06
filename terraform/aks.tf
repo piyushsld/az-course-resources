@@ -103,3 +103,13 @@ resource "azurerm_role_assignment" "aks_cluster_admin_github" {
   role_definition_name = each.key
   principal_id         = local.github_app_reg_id
 }
+
+resource "azurerm_role_assignment" "acr_push_github" {
+  for_each = toset(([
+    "AcrPull",
+    "AcrPush"
+  ]))
+  scope                = module.aks_private.aks_id
+  role_definition_name = each.key
+  principal_id         = local.github_app_reg_id
+}
