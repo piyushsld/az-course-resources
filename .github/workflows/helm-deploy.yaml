@@ -6,6 +6,7 @@ on:
     workflows: ["CICD Merge Workflow"]
     types:
       - completed
+  workflow_dispatch:
 
 # on:
 #   workflow_dispatch:
