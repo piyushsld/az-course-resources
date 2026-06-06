@@ -15,7 +15,6 @@ ${yamlencode({
     {
       path        = "/home/azureuser/bootstrap.sh"
       permissions = "0755"
-      owner       = "azureuser:azureuser"
       content     = local.bootstrap_script
     }
   ]
