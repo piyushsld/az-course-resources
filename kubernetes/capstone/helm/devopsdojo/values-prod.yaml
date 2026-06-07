@@ -45,8 +45,8 @@ database:
 
 secrets:
   dbUsername: postgres
-  dbPassword: ""  # Use --set or external secrets manager
-  secretKey: ""   # Use --set or external secrets manager
+  dbPassword: "POSTGRES_PASSWORD"  # Update or use --set
+  secretKey: "postgres-secret"
 
 ingress:
   enabled: true
