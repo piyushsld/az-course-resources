@@ -81,7 +81,7 @@ spec:
                   pathType: Prefix
 
         migration:
-          enabled: true
+          enabled: false
 
         podDisruptionBudget:
           enabled: true
