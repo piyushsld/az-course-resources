@@ -44,6 +44,8 @@ jobs:
           TF_VAR_tenant_id: ${{ secrets.AZURE_TENANT_ID }}
           TF_VAR_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           TF_VAR_ssh_public_key: ${{ secrets.SSH_PUBLIC_KEY }}
+          TF_VAR_gh_runner_token: ${{ steps.token.outputs.token }}
+          TF_VAR_gh_runner_url: ${{ secrets.GH_RUNNER_URL }}
         run: terragrunt plan --destroy
       
       - name: Terragrunt destroy
@@ -53,4 +55,6 @@ jobs:
           TF_VAR_tenant_id: ${{ secrets.AZURE_TENANT_ID }}
           TF_VAR_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           TF_VAR_ssh_public_key: ${{ secrets.SSH_PUBLIC_KEY }}
+          TF_VAR_gh_runner_token: ${{ steps.token.outputs.token }}
+          TF_VAR_gh_runner_url: ${{ secrets.GH_RUNNER_URL }}
         run: terragrunt destroy --auto-approve
