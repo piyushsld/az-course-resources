@@ -27,3 +27,15 @@ resource "azurerm_role_assignment" "aks_acr_pull_app" {
 #In yaml
 # spec:
 #   serviceAccountName: myapp
+
+resource "azurerm_federated_identity_credential" "external_secrets" {
+  name = "external-secrets"
+  # resource_group_name       = var.resource_group_name
+  user_assigned_identity_id = azurerm_user_assigned_identity.app.id
+
+  audience = ["api://AzureADTokenExchange"]
+
+  issuer = azurerm_kubernetes_cluster.this.oidc_issuer_url
+
+  subject = "system:serviceaccount:external-secrets:external-secrets"
+}
