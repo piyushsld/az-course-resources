@@ -104,3 +104,12 @@ jobs:
         working-directory: ${{ env.WORKING_DIR }}
         run: |
           kubectl apply -f argo-ingress.yaml
+
+      - name: Deploy External Secrets Chart
+        run: |
+          helm repo add external-secrets https://charts.external-secrets.io
+          helm repo update
+          helm upgrade --install external-secrets external-secrets/external-secrets \
+            --namespace external-secrets \
+            --create-namespace \
+            --set installCRDs=true

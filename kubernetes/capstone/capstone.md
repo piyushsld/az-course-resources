@@ -1,6 +1,6 @@
 # Capstone Project  
 
-The capstone project is a 3-tier application consisting of a Public Load balancer (tier-1), Frontend application(tier-2), a backend database(Postgres)(tier-3). We are going to host the application in kubernetes using Ingress L7 load balancer. We require TLS termination at Ingress layer and certificate management through cert-manager in k8s.
+The capstone project is a 3-tier application consisting of a Public Load balancer(Ingress), Frontend application(tier-1), Backend(tier-2) a backend database(Postgres)(tier-3). We are going to host the application in kubernetes using Ingress L7 load balancer. We require TLS termination at Ingress layer and certificate management through cert-manager in k8s.
 
 Database can be hosted as :-
 1. K8s statefulset
@@ -21,7 +21,22 @@ Do ensure that the necessary environment variables are setup in the Repo Setting
   RUNNER_ADMIN_PAT, # create a PAT from Github settings > Developer Setting > Classic Token
   SSH_PUBLIC_KEY # contents of id_rsa.pub from your local terminal
 
-Move to the next step once the workflow has executed successfully
+Move to the next step once the workflow has executed successfully but remember to make these changes before you execute this workflow -
+
+Note-1 :- The final state of this workflow will have runs-on: self-hosted. For the veryf first run, you have to change that ubuntu-latest because our ghrunner-01 is not setup yet.
+
+Note-2 :- Change the registry and keyvault name to something unique otherwise you would get terraform errors.
+
+Note-3 :- In main.tf inside modules, change resource "azurerm_role_assignment" "kv_secrets_admin" to your github app registration ID
+
+Note-4 :- In aks.tf change your user object id and github app id for access
+
+locals {
+  user_object_id = "your-object-id" # Replace with your actual Object ID 
+  # Run this to get your Object ID: az ad signed-in-user show --query id --output tsv
+  github_app_reg_id = "your-github-object-id" # Replace with your GitHub App Registration's Application (client) ID
+}
+
 ```
 ## Pre-requisite - CertManager, Cluster Issuer, Ingress, ArgoCD, Helm  
 ```
