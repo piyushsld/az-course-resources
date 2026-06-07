@@ -105,7 +105,7 @@ resource "azurerm_key_vault_secret" "postgres_password" {
 }
 
 resource "azurerm_postgresql_flexible_server_database" "appdb" {
-  name      = "3tierdb"
+  name      = "tier3db"
   server_id = azurerm_postgresql_flexible_server.postgres.id
   charset   = "UTF8"
   collation = "en_US.utf8"
