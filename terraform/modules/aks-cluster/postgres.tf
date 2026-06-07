@@ -1,7 +1,7 @@
 resource "random_password" "postgres" {
   length           = 24
   special          = true
-  override_special = "_%@"
+  override_special = "_%"
 }
 
 resource "azurerm_virtual_network" "postgres" {
