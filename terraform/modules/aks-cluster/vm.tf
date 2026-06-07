@@ -38,4 +38,10 @@ resource "azurerm_linux_virtual_machine" "ghrunner" {
     sku       = "server"
     version   = "latest"
   }
+
+  lifecycle {
+    ignore_changes = [
+      custom_data
+    ]
+  }
 }
