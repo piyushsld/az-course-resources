@@ -38,6 +38,7 @@ database:
     name: tier3db
 
 secrets:
+  createLocalSecret: false
   dbUsername: pgadmin
   dbPassword: ""  # Update or use --set
   secretKey: "postgres-secret"

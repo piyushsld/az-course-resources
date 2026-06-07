@@ -108,6 +108,27 @@ resource "azurerm_key_vault_secret" "postgres_password" {
   ]
 }
 
+resource "azurerm_key_vault_secret" "postgres_username" {
+  name         = "postgres-username"
+  value        = azurerm_postgresql_flexible_server.postgres.administrator_login
+  key_vault_id = azurerm_key_vault.this.id
+
+  depends_on = [
+    azurerm_role_assignment.kv_secrets_admin
+  ]
+}
+
+resource "azurerm_key_vault_secret" "database_url" {
+  name         = "database-url"
+  value        = "postgresql://${azurerm_postgresql_flexible_server.postgres.administrator_login}:${random_password.postgres.result}@${azurerm_postgresql_flexible_server.postgres.fqdn}:5432/${azurerm_postgresql_flexible_server_database.appdb.name}"
+  key_vault_id = azurerm_key_vault.this.id
+
+  depends_on = [
+    azurerm_role_assignment.kv_secrets_admin,
+    azurerm_postgresql_flexible_server_database.appdb
+  ]
+}
+
 resource "azurerm_postgresql_flexible_server_database" "appdb" {
   name      = "tier3db"
   server_id = azurerm_postgresql_flexible_server.postgres.id

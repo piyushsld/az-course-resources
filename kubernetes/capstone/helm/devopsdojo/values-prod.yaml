@@ -44,6 +44,7 @@ database:
     name: postgres
 
 secrets:
+  createLocalSecret: false
   dbUsername: postgres
   dbPassword: "POSTGRES_PASSWORD"  # Update or use --set
   secretKey: "postgres-secret"
