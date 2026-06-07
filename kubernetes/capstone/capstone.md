@@ -55,4 +55,9 @@ successful execution of last workflow. Take reference from help deploy about the
 ```
 Once the image deployment is setup, you can now copy the Application and deploy that by adding a new app
 in argocd. Make sure to assign a DNS on the frontend app and you're good to go.
+
+Note:- Update your uami client id and tenant id in kubernetes/capstone/argo-helm/app-secrets.yaml
+
+    azure.workload.identity/client-id: 3332be33-ba18-4997-8d67-ad373bdd5b64
+    azure.workload.identity/tenant-id: 6ba9d606-3474-492c-9a99-c2c94ad5462f
 ```
