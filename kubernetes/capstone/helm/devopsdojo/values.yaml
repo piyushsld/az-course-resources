@@ -11,8 +11,8 @@ frontend:
   enabled: true
   replicaCount: 2
   image:
-    repository: azurelddemo.azurecr.io/devopsdozo
-    tag: frontend-latest-1
+    repository: azurelddemo.azurecr.io/devopsdozo/frontend
+    tag: cc49b048dbb4471b0d8c9ccecdaeab05d7f95616
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
@@ -41,8 +41,8 @@ backend:
   enabled: true
   replicaCount: 2
   image:
-    repository: azurelddemo.azurecr.io/devopsdozo
-    tag: backend-latest-1
+    repository: azurelddemo.azurecr.io/devopsdozo/backend
+    tag: cc49b048dbb4471b0d8c9ccecdaeab05d7f95616
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
@@ -103,7 +103,7 @@ secrets:
 
 # Database migration job
 migration:
-  enabled: true
+  enabled: false
   ttlSecondsAfterFinished: 100
   backoffLimit: 3
   activeDeadlineSeconds: 300
