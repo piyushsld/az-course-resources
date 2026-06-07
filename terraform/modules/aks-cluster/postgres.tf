@@ -87,6 +87,8 @@ resource "azurerm_postgresql_flexible_server" "postgres" {
 
   sku_name = "B_Standard_B1ms"
 
+  public_network_access_enabled = false
+
   zone = "1"
 
   depends_on = [
