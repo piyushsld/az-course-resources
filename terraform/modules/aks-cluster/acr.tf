@@ -41,7 +41,7 @@ resource "azurerm_container_registry" "acr" {
   location            = var.location
 
   sku           = "Premium"
-  admin_enabled = true
+  admin_enabled = false
 
   public_network_access_enabled = false
 
@@ -55,3 +55,13 @@ resource "azurerm_subnet" "private_endpoints" {
 
   address_prefixes = var.pvt_ep_subnet_space
 }
+
+resource "azurerm_private_dns_zone_virtual_network_link" "acr_runner" {
+  name                  = "acr-runner-link"
+  resource_group_name   = var.resource_group_name
+  private_dns_zone_name = azurerm_private_dns_zone.acr.name
+
+  virtual_network_id   = azurerm_virtual_network.gh-runner.id
+  registration_enabled = false
+}
+

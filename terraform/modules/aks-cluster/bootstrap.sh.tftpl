@@ -32,8 +32,6 @@ Architectures: $(dpkg --print-architecture)
 Signed-By: /etc/apt/keyrings/docker.asc
 EOF
 
-sudo usermod -aG docker azureuser
-
 sudo apt update && sudo apt install -y unzip tar
 
 sudo apt-get install -y \
@@ -42,6 +40,8 @@ sudo apt-get install -y \
   containerd.io \
   docker-buildx-plugin \
   docker-compose-plugin
+
+sudo usermod -aG docker azureuser
 
 mkdir actions-runner && cd actions-runner
 
