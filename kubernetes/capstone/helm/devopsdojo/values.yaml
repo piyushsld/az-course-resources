@@ -97,6 +97,7 @@ database:
 
 # Secrets - these should be overridden or managed externally
 secrets:
+  createLocalSecret: false  # Set to true to create a Kubernetes Secret from these values
   dbUsername: pgadmin
   dbPassword: ""  # Required: Set via --set or external secret management
   secretKey: "postgres-secret"   # Required: Flask secret key
