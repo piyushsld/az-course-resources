@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: livingdevopswithakhilesh/devopsdozo:frontend-latest-1
+        image: azurelddemo.azurecr.io/devopsdozo/frontend:137f6dfb37c77fbb55c83392d1155df6047e0770
         imagePullPolicy: Always
         ports:
         - containerPort: 80
