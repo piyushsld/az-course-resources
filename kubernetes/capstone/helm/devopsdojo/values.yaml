@@ -4,14 +4,14 @@
 # Global settings
 global:
   namespace: devopsdojo
-  imageRegistry: livingdevopswithakhilesh/devopsdozo
+  imageRegistry: azurelddemo.azurecr.io/devopsdozo
 
 # Frontend configuration
 frontend:
   enabled: true
   replicaCount: 2
   image:
-    repository: livingdevopswithakhilesh/devopsdozo
+    repository: azurelddemo.azurecr.io/devopsdozo
     tag: frontend-latest-1
     pullPolicy: IfNotPresent
   service:
@@ -41,7 +41,7 @@ backend:
   enabled: true
   replicaCount: 2
   image:
-    repository: livingdevopswithakhilesh/devopsdozo
+    repository: azurelddemo.azurecr.io/devopsdozo
     tag: backend-latest-1
     pullPolicy: IfNotPresent
   service:
@@ -97,9 +97,9 @@ database:
 
 # Secrets - these should be overridden or managed externally
 secrets:
-  dbUsername: postgres
+  dbUsername: pgadmin
   dbPassword: ""  # Required: Set via --set or external secret management
-  secretKey: ""   # Required: Flask secret key
+  secretKey: "postgres-secret"   # Required: Flask secret key
 
 # Database migration job
 migration:

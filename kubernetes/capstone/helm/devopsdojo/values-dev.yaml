@@ -33,14 +33,14 @@ backend:
 database:
   external:
     enabled: true
-    host: "your-dev-db.rds.amazonaws.com"  # Update with your dev DB host
+    host: "pgsql-lddemo.postgres.database.azure.com"  # Update with your dev DB host
     port: "5432"
-    name: postgres
+    name: tier3db
 
 secrets:
-  dbUsername: postgres
-  dbPassword: "your-dev-password"  # Update or use --set
-  secretKey: "dev-secret-key"
+  dbUsername: pgadmin
+  dbPassword: ""  # Update or use --set
+  secretKey: "postgres-secret"
 
 ingress:
   enabled: false

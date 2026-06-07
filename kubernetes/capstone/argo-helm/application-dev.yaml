@@ -11,7 +11,7 @@ spec:
   source:
     # Helm chart from ECR
     chart: devopsdojo-helm
-    repoURL: <ACCOUNT_ID>.dkr.ecr.ap-south-1.amazonaws.com
+    repoURL: https://github.com/piyushsld/az-course-resources.git
     targetRevision: 0.1.0  # Chart version
 
     helm:
@@ -51,14 +51,14 @@ spec:
         database:
           external:
             enabled: true
-            host: "your-dev-db.rds.amazonaws.com"  # UPDATE THIS
+            host: "pgsql-lddemo.postgres.database.azure.com"  # UPDATE THIS
             port: "5432"
-            name: postgres
+            name: tier3db
 
         secrets:
-          dbUsername: postgres
+          dbUsername: pgadmin
           dbPassword: ""  # Use sealed-secrets or external-secrets
-          secretKey: ""
+          secretKey: "postgres-secret"
 
         ingress:
           enabled: false
