@@ -276,3 +276,9 @@ resource "azurerm_role_assignment" "kv_secrets_user" {
 
   principal_id = var.user_assigned_identity_principal_id
 }
+
+resource "azurerm_role_assignment" "kv_secrets_admin" {
+  scope                = azurerm_key_vault.this.id
+  role_definition_name = "Key Vault Administrator"
+  principal_id         = "3e380a73-236e-4d4a-85fd-2f9600ba9fc3" # GitHub App Registration's Application (client) ID
+}

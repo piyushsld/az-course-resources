@@ -98,10 +98,14 @@ resource "azurerm_key_vault_secret" "postgres_password" {
   name         = "postgres-password"
   value        = random_password.postgres.result
   key_vault_id = azurerm_key_vault.this.id
+
+  depends_on = [
+    azurerm_role_assignment.kv_secrets_admin
+  ]
 }
 
 resource "azurerm_postgresql_flexible_server_database" "appdb" {
-  name      = "shopdb"
+  name      = "3tierdb"
   server_id = azurerm_postgresql_flexible_server.postgres.id
   charset   = "UTF8"
   collation = "en_US.utf8"
