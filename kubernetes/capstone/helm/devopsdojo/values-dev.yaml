@@ -39,7 +39,7 @@ database:
 
 secrets:
   dbUsername: pgadmin
-  dbPassword: "POSTGRES_PASSWORD"  # Update or use --set
+  dbPassword: ""  # Update or use --set
   secretKey: "postgres-secret"
 
 ingress:
