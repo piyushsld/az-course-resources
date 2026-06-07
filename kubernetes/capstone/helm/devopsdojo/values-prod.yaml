@@ -68,7 +68,7 @@ ingress:
       secretName: devopsdojo-tls
 
 migration:
-  enabled: true
+  enabled: false
 
 podDisruptionBudget:
   enabled: true

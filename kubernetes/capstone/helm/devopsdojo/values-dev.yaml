@@ -46,4 +46,4 @@ ingress:
   enabled: false
 
 migration:
-  enabled: true
+  enabled: false
