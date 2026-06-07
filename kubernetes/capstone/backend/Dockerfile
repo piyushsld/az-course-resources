@@ -6,7 +6,7 @@ WORKDIR /app
 
 # Install system dependencies including PostgreSQL client, build tools, and dos2unix
 RUN apt-get update && apt-get install -y \
-    postgresql-client \
+    postgresql-client-16 \
     libpq-dev \
     gcc \
     python3-dev \
