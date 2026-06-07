@@ -97,43 +97,60 @@ jobs:
           git pull --rebase origin ${{ env.environment_branch }}
           git push --force origin ${{ env.environment_branch }}
 
-  # build-and-push-backend:
-  #   name: Build and Push Backend Image
-  #   needs: changes
-  #   if: ${{ needs.changes.outputs.backend == 'true' || github.event_name == 'workflow_dispatch' }}
-  #   runs-on: ubuntu-latest
+  build-and-push-backend:
+    name: Build and Push Backend Image
+    environment: dev
+    # needs: changes
+    # if: ${{ needs.changes.outputs.backend == 'true' || github.event_name == 'workflow_dispatch' }}
+    runs-on: self-hosted
     
-  #   permissions:
-  #     id-token: write
-  #     contents: read
+    permissions:
+      id-token: write
+      contents: write
       
-  #   steps:
-  #     - name: Checkout repository
-  #       uses: actions/checkout@v3
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
         
-  #     - name: Configure AWS credentials
-  #       uses: aws-actions/configure-aws-credentials@v3
-  #       with:
-  #         aws-region: ${{ env.AWS_REGION }}
-  #         # role-to-assume: arn:aws:iam::879381241087:role/GitHubActionsEKSDeployRole
-  #         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  #         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      - name: Azure login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           
-  #     - name: Login to Amazon ECR
-  #       id: login-ecr
-  #       uses: aws-actions/amazon-ecr-login@v1
+      - name: Login to ACR
+        run: |
+          az acr login --name ${{ env.ECR_REGISTRY }}
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Buildx
+        uses: docker/setup-buildx-action@v3
         
-  #     - name: Build, tag, and push backend image to Amazon ECR
-  #       working-directory: ./backend
-  #       env:
-  #         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-  #       run: |
-  #         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY_BACKEND:$IMAGE_TAG \
-  #                    --platform=linux/amd64 .
-  #         docker push $ECR_REGISTRY/$ECR_REPOSITORY_BACKEND:$IMAGE_TAG
-  #         echo "Backend image pushed to ECR: $ECR_REGISTRY/$ECR_REPOSITORY_BACKEND:$IMAGE_TAG"
-      
-  #     - name: Summary
-  #       run: |
-  #         echo "### Backend Docker Image" >> $GITHUB_STEP_SUMMARY
-  #         echo "✅ Backend: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY_BACKEND }}:${{ env.IMAGE_TAG }}" >> $GITHUB_STEP_SUMMARY
+      - name: Build and push Docker image Backend
+        working-directory: ${{ env.WORKING_DIR }}/backend/
+        run: |
+          docker buildx build --platform linux/arm64 -t ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY_BACKEND }}:${{ github.sha }} . --push
+
+      - name: Update Kubernetes deployment manifest Backend
+        working-directory: ${{ env.WORKING_DIR }}/k8s
+        run: |
+
+          # Update the image in the deployment file
+          sed -i "s|image:.*backend.*|image: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY_BACKEND }}:${{ env.IMAGE_TAG }}|g" \
+            backend.yaml
+
+          echo "Updated Backend yaml with new image tag -> ${{ env.IMAGE_TAG }}"
+          echo "Image: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY_BACKEND }}:${{ env.IMAGE_TAG }}"
+
+      - name: Commit and push updated manifests Backend
+        working-directory: ${{ env.WORKING_DIR }}/k8s
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add backend.yaml
+          git diff --staged --quiet || git commit -m "Update Backend image to ${{ env.IMAGE_TAG }} tag"
+          git pull --rebase origin ${{ env.environment_branch }}
+          git push --force origin ${{ env.environment_branch }}

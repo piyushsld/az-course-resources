@@ -23,10 +23,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Ensure migrate.sh has Unix line endings
-RUN chmod +x migrate.sh
+RUN chmod +x migrate.sh entrypoint.sh
 
 # Expose port
 EXPOSE 8000
 
 # Command to run the application
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "run:app"]
+CMD ["./entrypoint.sh"]
