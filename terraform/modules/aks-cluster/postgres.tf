@@ -97,7 +97,7 @@ resource "azurerm_postgresql_flexible_server" "postgres" {
 resource "azurerm_key_vault_secret" "postgres_password" {
   name         = "postgres-password"
   value        = random_password.postgres.result
-  key_vault_id = azurerm_key_vault.kv.id
+  key_vault_id = azurerm_key_vault.this.id
 }
 
 resource "azurerm_postgresql_flexible_server_database" "appdb" {
