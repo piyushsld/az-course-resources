@@ -113,3 +113,8 @@ jobs:
             --namespace external-secrets \
             --create-namespace \
             --set installCRDs=true
+
+      - name: Apply ClusterStore yaml
+        working-directory: ${{ env.WORKING_DIR }}../capstone/argo-helm
+        run: |
+          kubectl apply -f app-secrets.yaml

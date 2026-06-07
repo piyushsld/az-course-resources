@@ -87,6 +87,9 @@ jobs:
           echo "Updated Frontend yaml with new image tag -> ${{ env.IMAGE_TAG }}"
           echo "Image: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY_FRONTEND }}:${{ env.IMAGE_TAG }}"
 
+          sed -i '/^frontend:/,/^backend:/ { /^ *tag:/ s|^\([[:space:]]*tag:[[:space:]]*\).*|\1${{ env.IMAGE_TAG }}| }' ../helm/devopsdojo/values.yaml
+          echo "Updated values.yaml frontend with new image tag -> ${{ env.IMAGE_TAG }}"
+
       - name: Commit and push updated manifests Frontend
         working-directory: ${{ env.WORKING_DIR }}/k8s
         run: |
@@ -144,6 +147,9 @@ jobs:
 
           echo "Updated Backend yaml with new image tag -> ${{ env.IMAGE_TAG }}"
           echo "Image: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY_BACKEND }}:${{ env.IMAGE_TAG }}"
+
+          sed -i '/^backend:/,/^database:/ { /^ *tag:/ s|^\([[:space:]]*tag:[[:space:]]*\).*|\1${{ env.IMAGE_TAG }}| }' ../helm/devopsdojo/values.yaml
+          echo "Updated values.yaml backend with new image tag -> ${{ env.IMAGE_TAG }}"
 
       - name: Commit and push updated manifests Backend
         working-directory: ${{ env.WORKING_DIR }}/k8s
