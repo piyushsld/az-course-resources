@@ -95,7 +95,7 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add frontend.yaml
+          git add frontend.yaml ../helm/devopsdojo/values.yaml
           git diff --staged --quiet || git commit -m "Update Frontend image to ${{ env.IMAGE_TAG }} tag"
           git pull --rebase origin ${{ env.environment_branch }}
           git push --force origin ${{ env.environment_branch }}
@@ -156,7 +156,7 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add backend.yaml
+          git add backend.yaml ../helm/devopsdojo/values.yaml
           git diff --staged --quiet || git commit -m "Update Backend image to ${{ env.IMAGE_TAG }} tag"
           git pull --rebase origin ${{ env.environment_branch }}
           git push --force origin ${{ env.environment_branch }}
