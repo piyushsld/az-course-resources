@@ -102,7 +102,9 @@ resource "azurerm_key_vault_secret" "postgres_password" {
   key_vault_id = azurerm_key_vault.this.id
 
   depends_on = [
-    azurerm_role_assignment.kv_secrets_admin
+    azurerm_role_assignment.kv_secrets_admin,
+    azurerm_virtual_network_peering.postgres_to_runner,
+    azurerm_virtual_network_peering.runner_to_postgres
   ]
 }
 
@@ -111,4 +113,20 @@ resource "azurerm_postgresql_flexible_server_database" "appdb" {
   server_id = azurerm_postgresql_flexible_server.postgres.id
   charset   = "UTF8"
   collation = "en_US.utf8"
+}
+
+resource "azurerm_virtual_network_peering" "postgres_to_runner" {
+  name                 = "postgres-to-runner"
+  resource_group_name  = var.resource_group_name
+  virtual_network_name = azurerm_virtual_network.postgres.name
+
+  remote_virtual_network_id = azurerm_virtual_network.gh-runner.id
+}
+
+resource "azurerm_virtual_network_peering" "runner_to_postgres" {
+  name                 = "runner-to-postgres"
+  resource_group_name  = var.resource_group_name
+  virtual_network_name = azurerm_virtual_network.gh-runner.name
+
+  remote_virtual_network_id = azurerm_virtual_network.postgres.id
 }
