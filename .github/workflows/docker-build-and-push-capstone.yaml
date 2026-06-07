@@ -77,20 +77,22 @@ jobs:
           docker buildx build --platform linux/arm64 -t ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY_FRONTEND }}:${{ github.sha }} . --push
 
       - name: Update Kubernetes deployment manifest Frontend
+        working-directory: ${{ env.WORKING_DIR }}/k8s
         run: |
 
           # Update the image in the deployment file
           sed -i "s|image:.*frontend.*|image: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY_FRONTEND }}:${{ env.IMAGE_TAG }}|g" \
-            ./${{ env.WORKING_DIR }}/frontend.yaml
+            frontend.yaml
 
           echo "Updated Frontend yaml with new image tag -> ${{ env.IMAGE_TAG }}"
           echo "Image: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY_FRONTEND }}:${{ env.IMAGE_TAG }}"
 
       - name: Commit and push updated manifests Frontend
+        working-directory: ${{ env.WORKING_DIR }}/k8s
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add ${{ env.WORKING_DIR }}/frontend.yaml
+          git add frontend.yaml
           git diff --staged --quiet || git commit -m "Update Frontend image to ${{ env.IMAGE_TAG }} tag"
           git pull --rebase origin ${{ env.environment_branch }}
           git push --force origin ${{ env.environment_branch }}

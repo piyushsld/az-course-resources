@@ -32,6 +32,8 @@ Architectures: $(dpkg --print-architecture)
 Signed-By: /etc/apt/keyrings/docker.asc
 EOF
 
+sudo usermod -aG docker azureuser
+
 sudo apt update && sudo apt install -y unzip tar
 
 sudo apt-get install -y \
