@@ -42,7 +42,7 @@ backend:
   replicaCount: 2
   image:
     repository: azurelddemo.azurecr.io/devopsdozo/backend
-    tag: e57357d4078568db0c6f545e8fefbc13ef8224a7
+    tag: b866b4da24aa83bb46b663da78925ebc2bf9294b
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP

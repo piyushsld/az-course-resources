@@ -28,7 +28,7 @@ spec:
         command: ['sh', '-c', 'until nslookup postgres-db.3-tier-app-eks.svc.cluster.local; do echo waiting for database; sleep 2; done;']
       containers:
       - name: backend
-        image: azurelddemo.azurecr.io/devopsdozo/backend:e57357d4078568db0c6f545e8fefbc13ef8224a7
+        image: azurelddemo.azurecr.io/devopsdozo/backend:b866b4da24aa83bb46b663da78925ebc2bf9294b
         imagePullPolicy: Always
         ports:
         - containerPort: 8000
